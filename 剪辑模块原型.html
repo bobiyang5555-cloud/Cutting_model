@@ -69,7 +69,16 @@
         /* 底部 tab 页面切换：确保非当前页被隐藏 */
         .page-view { display: block; }
         .page-view.hidden { display: none !important; }
-    </style>
+
+        .manual-preview-frame { position: relative; }
+        .manual-preview-bg {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+            filter: blur(18px); transform: scale(1.12); opacity: 0; transition: opacity .2s ease;
+        }
+        .manual-preview-bg.is-visible { opacity: .95; }
+        .manual-preview-foreground { position: relative; z-index: 1; width: 100%; height: 100%; }
+    
+</style>
 </head>
 <body class="bg-slate-100 flex justify-center items-center h-screen font-sans">
 
@@ -640,6 +649,45 @@
                             <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transition-transform" id="floatingFaqToggleThumb"></div>
                         </label>
                     </div>
+
+                    <div id="manualExportProgressPage" class="hidden absolute inset-0 z-[70] bg-[#0b0b0f] text-white" style="display:none;">
+                        <div class="pt-10 px-6">
+                            <button type="button" onclick="closeManualSaveFlow()" class="w-8 h-8 flex items-center justify-center text-white/85 active:scale-95 transition"><i class="fa-solid fa-xmark text-[22px]"></i></button>
+                        </div>
+                        <div class="px-6 pt-6 flex flex-col items-center text-center">
+                            <h3 id="manualExportStatusTitle" class="mt-6 text-[20px] font-bold">正在努力保存中</h3>
+                            <p id="manualExportStatusDesc" class="mt-3 text-[13px] leading-5 text-white/55 max-w-[300px]">将 App 切换到后台将暂停保存，在不重启 App 的情况下切换回前台可继续保存。<br>温馨提示：导出后的视频不支持 AI 分析。</p>
+                            <div id="manualExportRing" class="mt-8 w-full max-w-[320px] rounded-[28px] p-[6px] shadow-[0_12px_32px_rgba(0,0,0,0.28)]" style="background: conic-gradient(#ffd400 28%, rgba(255,255,255,0.14) 0);">
+                                <div class="rounded-[22px] overflow-hidden border border-white/15 bg-white/5">
+                                    <div class="relative aspect-[1.72/1] bg-black">
+                                        <img id="manualExportProgressImage" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" class="w-full h-full object-cover opacity-80" alt="export progress">
+                                        <div class="absolute inset-0 bg-black/25"></div>
+                                        <div id="manualExportProgressText" class="absolute inset-0 flex items-center justify-center text-white text-[56px] font-extrabold tracking-tight">28%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="manualExportShareSection" class="hidden mt-14 w-full">
+                                <p class="text-[15px] text-white/55">立即分享至</p>
+                                <div class="mt-6 flex items-center justify-center gap-7">
+                                    <button type="button" onclick="openManualShareConfirm('小红书')" class="w-[62px] h-[62px] rounded-full bg-white/85 text-[#111] flex items-center justify-center text-[14px] font-bold active:scale-95 transition">小红书</button>
+                                    <button type="button" onclick="openManualShareConfirm('微信')" class="w-[62px] h-[62px] rounded-full bg-white/85 text-[#111] flex items-center justify-center text-[16px] font-bold active:scale-95 transition"><i class="fa-brands fa-weixin text-[28px]"></i></button>
+                                    <button type="button" onclick="openManualShareConfirm('抖音')" class="w-[62px] h-[62px] rounded-full bg-white/85 text-[#111] flex items-center justify-center text-[16px] font-bold active:scale-95 transition"><i class="fa-brands fa-tiktok text-[28px]"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="manualShareConfirmMask" class="hidden absolute inset-0 bg-black/45"></div>
+                        <div id="manualShareConfirmDialog" class="hidden absolute left-1/2 -translate-x-1/2 bottom-10 w-[86%] rounded-[22px] bg-[#1a1a1f] border border-white/10 shadow-2xl px-5 pt-5 pb-4 text-left">
+                            <p class="text-[17px] font-bold text-white">打开对应 App</p>
+                            <p id="manualShareConfirmText" class="mt-3 text-[14px] leading-6 text-white/70">是否跳转到对应社交 App 进行分享？</p>
+                            <div class="mt-5 grid grid-cols-2 gap-3">
+                                <button type="button" onclick="closeManualShareConfirm()" class="h-11 rounded-[14px] bg-white/10 text-white/80 text-[15px] font-semibold active:scale-95 transition">取消</button>
+                                <button type="button" onclick="confirmManualShare()" class="h-11 rounded-[14px] bg-[#ffd400] text-black text-[15px] font-semibold active:scale-95 transition">确定</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="manualExportDonePage" class="hidden absolute inset-0 z-[70] bg-[#0b0b0f] text-white" style="display:none;"></div>
+
                 </div>
             </div>
         </div>
@@ -813,7 +861,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <button id="manualRatioToggle" type="button" onclick="toggleManualRatioMenu()" class="h-11 min-w-[74px] px-4 rounded-xl bg-white/10 text-white text-[16px] font-semibold flex items-center justify-center gap-2 active:scale-95 transition">
-                                <span id="manualRatioLabel">16:9</span>
+                                <span id="manualRatioLabel">默认</span>
                                 <i id="manualRatioArrow" class="fa-solid fa-chevron-down text-[12px] text-white/80 transition-transform"></i>
                             </button>
                             <button type="button" onclick="openManualExportSheet()" class="h-11 min-w-[72px] px-4 rounded-xl bg-[#ffd400] text-black text-[16px] font-semibold flex items-center justify-center active:scale-95 transition">
@@ -822,9 +870,10 @@
                         </div>
                     </div>
 
-                    <div id="manualRatioMenu" class="hidden absolute top-[58px] left-5 right-5 rounded-b-[18px] bg-[#141414] border border-white/5 border-t-0 px-4 py-4 shadow-2xl z-20">
+                    <div id="manualRatioMenu" class="hidden absolute top-[68px] right-[96px] w-[248px] rounded-[18px] bg-[#141414] border border-white/5 px-4 py-4 shadow-2xl z-20">
                         <div class="flex items-center justify-between gap-2 text-center">
-                            <button type="button" data-manual-ratio-option="16:9" onclick="setManualRatio('16:9')" class="manual-ratio-option h-8 min-w-[48px] px-2 rounded-md bg-[#ffd400] text-black text-[13px] font-bold active:scale-95 transition">16:9</button>
+                            <button type="button" data-manual-ratio-option="默认" onclick="setManualRatio('默认')" class="manual-ratio-option h-8 min-w-[48px] px-2 rounded-md bg-[#ffd400] text-black text-[13px] font-bold active:scale-95 transition">默认</button>
+                            <button type="button" data-manual-ratio-option="16:9" onclick="setManualRatio('16:9')" class="manual-ratio-option h-8 min-w-[48px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">16:9</button>
                             <button type="button" data-manual-ratio-option="9:16" onclick="setManualRatio('9:16')" class="manual-ratio-option h-8 min-w-[48px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">9:16</button>
                             <button type="button" data-manual-ratio-option="1:1" onclick="setManualRatio('1:1')" class="manual-ratio-option h-8 min-w-[42px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">1:1</button>
                             <button type="button" data-manual-ratio-option="3:4" onclick="setManualRatio('3:4')" class="manual-ratio-option h-8 min-w-[42px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">3:4</button>
@@ -835,8 +884,10 @@
 
                 <div class="px-4">
                     <div id="manualPreviewStage" class="w-full h-[302px] bg-black rounded-sm flex items-center justify-center overflow-hidden">
-                        <div id="manualPreviewFrame" class="bg-black overflow-hidden flex items-center justify-center" style="width: 328px; height: 184.5px;">
-                            <img id="manualPreviewImage" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览画面" class="w-full h-full object-cover">
+                        <div id="manualPreviewFrame" class="manual-preview-frame bg-black overflow-hidden flex items-center justify-center" style="width: 328px; height: 184.5px;">
+                            <img id="manualPreviewBlurBg" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览背景" class="manual-preview-bg">
+                            <img id="manualPreviewImage" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览画面" class="manual-preview-foreground object-cover">
+                            <div id="manualEditorWatermarkPreview" class="absolute z-[2] text-white font-bold tracking-tight text-[16px] drop-shadow-lg select-none pointer-events-none" style="left:50%;bottom:9%;transform:translateX(-50%);">XbotGo</div>
                         </div>
                     </div>
                 </div>
@@ -854,12 +905,24 @@
                 </div>
 
                 <div class="mt-2 bg-[#121212] border-t border-white/5 px-4 pt-4 pb-3 flex-1 flex flex-col relative">
-                    <div id="manualTimelineGuide" class="absolute left-1/2 -translate-x-1/2 bottom-[78px] z-30 pointer-events-none">
-                        <div class="relative flex flex-col items-center">
-                            <div class="w-20 h-20 rounded-full bg-white/10 border border-white/10 flex items-center justify-center backdrop-blur-sm mb-2 animate-pulse">
-                                <div class="text-[42px] leading-none">🤏</div>
-                            </div>
-                            <div class="px-4 py-2.5 rounded-2xl bg-white text-[#111] text-[13px] font-semibold shadow-xl whitespace-nowrap">双指缩放时间轴</div>
+                    <div id="manualTimelineGuide" class="absolute inset-0 z-30 hidden">
+                        <div class="relative w-full h-full">
+                            <div class="absolute left-1/2 -translate-x-1/2 bottom-[122px] w-[320px] h-[72px] rounded-[12px] border-[3px] border-white"></div>
+                            
+                            
+<div class="absolute left-1/2 -translate-x-1/2 bottom-[92px] w-[166px] h-[118px]">
+    <svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full">
+      <!-- hand back -->
+      <path d="M99 151c-17 0-30-8-40-22L36 96c-5-8-3-17 4-22 7-4 16-3 22 3l14 12V37c0-10 8-18 18-18s18 8 18 18v29c0-7 6-13 14-13s14 6 14 13v11c1-6 6-11 13-11 8 0 14 6 14 14v10c2-5 7-9 13-9 9 0 15 7 15 16v24c0 16-7 29-19 37-9 6-19 9-32 9H99z" fill="#fff"/>
+      <!-- thumb and index on the two blue points -->
+      <path d="M66 81c-8-16-18-27-30-35" stroke="#d9d9d9" stroke-width="6" stroke-linecap="round"/>
+      <path d="M140 70c10-18 24-32 42-40" stroke="#d9d9d9" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+    <div class="absolute left-[6px] top-[4px] w-[28px] h-[28px] rounded-full bg-[#37a8ff] opacity-95 animate-pulse"></div>
+    <div class="absolute right-[6px] top-[4px] w-[28px] h-[28px] rounded-full bg-[#37a8ff] opacity-95 animate-pulse"></div>
+</div>
+
+                            <div class="absolute left-1/2 -translate-x-1/2 bottom-[34px] px-6 py-3 rounded-[18px] bg-white text-[#111] text-[14px] font-semibold shadow-xl whitespace-nowrap">双指缩放时间轴</div>
                         </div>
                     </div>
                     <div class="relative h-[170px]">
@@ -928,20 +991,22 @@
                             <button type="button" onclick="closeManualSoundFxPanel()" class="w-11 h-11 rounded-full text-[#ff335c] text-[24px] flex items-center justify-center active:scale-95 transition"><i class="fa-solid fa-check"></i></button>
                         </div>
                         <div class="flex items-center gap-7 text-[15px] font-semibold mb-5 overflow-x-auto no-scrollbar whitespace-nowrap">
-                            <button type="button" onclick="setManualSoundFxCategory('slow')" data-sfx-cat="slow" class="manual-sfx-cat text-[#ff335c] relative pb-1">慢节奏<span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#ff335c]"></span></button>
-                            <button type="button" onclick="setManualSoundFxCategory('fast')" data-sfx-cat="fast" class="manual-sfx-cat text-white/90 relative pb-1">快节奏</button>
+                            <button type="button" onclick="setManualSoundFxCategory('basketball')" data-sfx-cat="basketball" class="manual-sfx-cat text-[#ff335c] relative pb-1">篮球<span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#ff335c]"></span></button>
+                            <button type="button" onclick="setManualSoundFxCategory('football')" data-sfx-cat="football" class="manual-sfx-cat text-white/90 relative pb-1">足球</button>
+                            <button type="button" onclick="setManualSoundFxCategory('tennis')" data-sfx-cat="tennis" class="manual-sfx-cat text-white/90 relative pb-1">网球</button>
+                            <button type="button" onclick="setManualSoundFxCategory('other')" data-sfx-cat="other" class="manual-sfx-cat text-white/90 relative pb-1">其他</button>
                         </div>
                         <div id="manualSoundFxList" class="space-y-4 text-white">
                             <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效1</p><p class="text-[12px] text-white/45 mt-0.5">00:05</p></div></div>
+                                <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate inline-flex items-center gap-1.5">音效1 <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-rose-500/95 text-white text-[10px] font-bold shadow-sm">付费</span></p><p class="text-[12px] text-white/45 mt-0.5">00:05</p></div></div>
                                 <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
                             </div>
                             <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效2</p><p class="text-[12px] text-white/45 mt-0.5">00:03</p></div></div>
+                                <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate inline-flex items-center gap-1.5">音效2 <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/95 text-gray-900 text-[10px] font-bold shadow-sm">限免</span></p><p class="text-[12px] text-white/45 mt-0.5">00:03</p></div></div>
                                 <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
                             </div>
                             <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效1</p><p class="text-[12px] text-white/45 mt-0.5">00:04</p></div></div>
+                                <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate inline-flex items-center gap-1.5">音效1</p><p class="text-[12px] text-white/45 mt-0.5">00:04</p></div></div>
                                 <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
                             </div>
                         </div>
@@ -984,7 +1049,7 @@
                                 <i class="fa-solid fa-chevron-right text-[13px]"></i>
                             </button>
                         </div>
-                        <button type="button" class="w-full h-14 rounded-[16px] bg-[#ffd400] text-black text-[17px] font-semibold active:scale-[0.99] transition">保存到本地</button>
+                        <button type="button" onclick="startManualSaveExport()" class="w-full h-14 rounded-[16px] bg-[#ffd400] text-black text-[17px] font-semibold active:scale-[0.99] transition">保存到本地</button>
                     </div>
 
                     <div id="manualExportDetailSheet" class="hidden absolute left-0 right-0 bottom-0 z-50 bg-[#f6f6f7] text-black rounded-t-[28px] px-5 pt-5 pb-6 shadow-2xl max-h-[88%] overflow-y-auto no-scrollbar">
@@ -994,73 +1059,106 @@
                             <button type="button" onclick="closeManualExportDetail()" class="w-8 h-8 rounded-full flex items-center justify-center text-[#8f8f95] active:scale-95 transition"><i class="fa-solid fa-chevron-down text-[18px]"></i></button>
                         </div>
 
-                        <div class="flex items-center justify-between mb-4">
-                            <p class="text-[14px] font-semibold">平台推荐参数</p>
-                            <button type="button" class="text-[13px] text-[#8f8f95] flex items-center gap-2 active:scale-95 transition">
-                                <span id="manualExportPresetLabel">1080P/30FPS</span>
-                                <span class="w-5 h-5 rounded-full border-2 border-[#ffd400] inline-flex items-center justify-center"><span class="w-2.5 h-2.5 rounded-full bg-[#ffd400]"></span></span>
-                            </button>
-                        </div>
+                        <div id="manualExportPresetBlock" class="mb-7">
+                            <div class="flex items-center justify-between mb-4">
+                                <p class="text-[14px] font-semibold">平台推荐参数</p>
+                                <button type="button" id="manualExportPresetModeBtn" onclick="setManualExportMode('preset')" class="text-[13px] text-[#8f8f95] flex items-center gap-2 active:scale-95 transition">
+                                    <span id="manualExportPresetLabel">1080P/30FPS</span>
+                                    <span id="manualExportPresetIndicator" class="w-5 h-5 rounded-full border-2 border-[#ffd400] inline-flex items-center justify-center"><span class="w-2.5 h-2.5 rounded-full bg-[#ffd400]"></span></span>
+                                </button>
+                            </div>
 
-                        <div class="flex items-center gap-3 overflow-x-auto no-scrollbar mb-7 whitespace-nowrap">
-                            <button type="button" onclick="setManualExportPreset('默认')" data-export-preset="默认" class="manual-export-preset h-12 px-5 rounded-full bg-[#ffd400] text-black text-[14px] font-semibold shrink-0 flex items-center justify-center gap-2"><i class="fa-regular fa-image text-[16px]"></i><span>默认</span></button>
-                            <button type="button" onclick="setManualExportPreset('抖音')" data-export-preset="抖音" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">抖音</button>
-                            <button type="button" onclick="setManualExportPreset('小红书')" data-export-preset="小红书" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">小红书</button>
-                            <button type="button" onclick="setManualExportPreset('微信')" data-export-preset="微信" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">微信</button>
+                            <div id="manualExportPresetList" class="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap">
+                                <button type="button" onclick="setManualExportPreset('默认')" data-export-preset="默认" class="manual-export-preset h-12 px-5 rounded-full bg-[#ffd400] text-black text-[14px] font-semibold shrink-0 flex items-center justify-center gap-2"><i class="fa-regular fa-image text-[16px]"></i><span>默认</span></button>
+                                <button type="button" onclick="setManualExportPreset('抖音')" data-export-preset="抖音" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">抖音</button>
+                                <button type="button" onclick="setManualExportPreset('小红书')" data-export-preset="小红书" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">小红书</button>
+                                <button type="button" onclick="setManualExportPreset('微信')" data-export-preset="微信" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">微信</button>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between mb-4">
                             <p class="text-[14px] font-semibold">自定义参数</p>
                             <label class="inline-flex items-center gap-2">
-                                <span class="text-[13px] text-[#a1a1a8]">自定义你的专属参数</span>
-                                <button type="button" id="manualExportCustomToggle" onclick="toggleManualExportCustom()" class="w-7 h-7 rounded-full border-2 border-[#dedee3] bg-white flex items-center justify-center active:scale-95 transition">
+                                <span id="manualExportCustomHint" class="text-[13px] text-[#a1a1a8]">自定义你的专属参数</span>
+                                <button type="button" id="manualExportCustomToggle" onclick="setManualExportMode('custom')" class="w-7 h-7 rounded-full border-2 border-[#dedee3] bg-white flex items-center justify-center active:scale-95 transition">
                                     <span id="manualExportCustomDot" class="w-3 h-3 rounded-full bg-transparent"></span>
                                 </button>
                             </label>
                         </div>
 
-                        <div id="manualExportCustomSection" class="opacity-40 pointer-events-none">
+                        <div id="manualExportCustomSection" class="opacity-40 pointer-events-none mb-2">
                             <div class="mb-5">
                                 <p class="text-[14px] font-semibold mb-3">分辨率</p>
-                                <div class="relative px-4">
-                                    <div class="h-1.5 rounded-full bg-[#e6e6ea]"></div>
-                                    <div class="absolute left-[36%] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border-[5px] border-[#e3e3e6]"></div>
-                                </div>
-                                <div class="flex justify-between text-[12px] text-[#b7b7bd] mt-3 px-1">
-                                    <span>720P</span><span>1080P</span><span>1440P</span><span>4K</span>
+                                <div class="flex gap-2 flex-wrap">
+                                    <button type="button" onclick="setManualCustomOption('resolution','720P')" data-custom-group="resolution" data-custom-value="720P" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">720P</button>
+                                    <button type="button" onclick="setManualCustomOption('resolution','1080P')" data-custom-group="resolution" data-custom-value="1080P" class="manual-custom-chip h-10 px-4 rounded-full bg-[#fff2a8] text-black text-[13px] font-semibold border border-[#ffd400]">1080P</button>
+                                    <button type="button" onclick="setManualCustomOption('resolution','1440P')" data-custom-group="resolution" data-custom-value="1440P" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">1440P</button>
+                                    <button type="button" onclick="setManualCustomOption('resolution','4K')" data-custom-group="resolution" data-custom-value="4K" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">4K</button>
                                 </div>
                             </div>
 
                             <div class="mb-5">
                                 <p class="text-[14px] font-semibold mb-3">帧率</p>
-                                <div class="relative px-4">
-                                    <div class="h-1.5 rounded-full bg-[#e6e6ea]"></div>
-                                    <div class="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border-[5px] border-[#e3e3e6]"></div>
-                                </div>
-                                <div class="flex justify-between text-[12px] text-[#b7b7bd] mt-3 px-1">
-                                    <span>25</span><span>30</span>
+                                <div class="flex gap-2 flex-wrap">
+                                    <button type="button" onclick="setManualCustomOption('fps','25FPS')" data-custom-group="fps" data-custom-value="25FPS" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">25FPS</button>
+                                    <button type="button" onclick="setManualCustomOption('fps','30FPS')" data-custom-group="fps" data-custom-value="30FPS" class="manual-custom-chip h-10 px-4 rounded-full bg-[#fff2a8] text-black text-[13px] font-semibold border border-[#ffd400]">30FPS</button>
                                 </div>
                             </div>
 
                             <div class="mb-6">
                                 <p class="text-[14px] font-semibold mb-3">码率 (Mbps)</p>
-                                <div class="relative px-4">
-                                    <div class="h-1.5 rounded-full bg-[#e6e6ea]"></div>
-                                    <div class="absolute left-[62%] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border-[5px] border-[#e3e3e6]"></div>
+                                <div class="flex gap-2 flex-wrap">
+                                    <button type="button" onclick="setManualCustomOption('bitrate','5')" data-custom-group="bitrate" data-custom-value="5" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">5</button>
+                                    <button type="button" onclick="setManualCustomOption('bitrate','10')" data-custom-group="bitrate" data-custom-value="10" class="manual-custom-chip h-10 px-4 rounded-full bg-[#fff2a8] text-black text-[13px] font-semibold border border-[#ffd400]">10</button>
+                                    <button type="button" onclick="setManualCustomOption('bitrate','15')" data-custom-group="bitrate" data-custom-value="15" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">15</button>
+                                    <button type="button" onclick="setManualCustomOption('bitrate','25')" data-custom-group="bitrate" data-custom-value="25" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">25</button>
                                 </div>
-                                <div class="flex justify-between text-[12px] text-[#b7b7bd] mt-3 px-1">
-                                    <span>1</span><span>5</span><span>10</span><span>15</span><span>25</span><span>50</span><span>150</span>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center justify-between py-4 border-t border-black/5">
-                                <p class="text-[14px] font-semibold">水印设置</p>
-                                <button type="button" class="flex items-center gap-2 text-[14px] text-[#8f8f95]"><span>已开启</span><i class="fa-solid fa-chevron-right text-[13px]"></i></button>
                             </div>
 
                         </div>
 
-                        <button type="button" class="w-full h-14 rounded-[16px] bg-[#ffd400] text-black text-[17px] font-semibold active:scale-[0.99] transition">保存到本地</button>
+                        <div id="manualWatermarkBlock" class="flex items-center justify-between py-4 border-t border-black/5 mb-4">
+                            <p class="text-[14px] font-semibold">水印设置</p>
+                            <button type="button" onclick="openManualWatermarkSheet()" id="manualWatermarkEntryBtn" class="flex items-center gap-2 text-[14px] text-[#8f8f95] active:scale-95 transition"><span id="manualWatermarkStatusText">已开启</span><i class="fa-solid fa-chevron-right text-[13px]"></i></button>
+                        </div>
+
+                        <button type="button" onclick="startManualSaveExport()" class="w-full h-14 rounded-[16px] bg-[#ffd400] text-black text-[17px] font-semibold active:scale-[0.99] transition">保存到本地</button>
+                    </div>
+
+                    <div id="manualWatermarkSheet" class="hidden absolute left-0 right-0 bottom-0 z-[60] bg-[#232327] text-white rounded-t-[28px] px-5 pt-5 pb-6 shadow-2xl">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-8"></div>
+                            <h3 class="text-center text-[17px] font-bold">水印设置</h3>
+                            <button type="button" onclick="closeManualWatermarkSheet()" class="w-8 h-8 rounded-full flex items-center justify-center text-white/80 active:scale-95 transition"><i class="fa-solid fa-xmark text-[20px]"></i></button>
+                        </div>
+                        <div class="relative mb-6 rounded-[8px] overflow-hidden bg-[#303035] aspect-[1.15/1] border border-white/5">
+                            <img id="manualWatermarkPreviewImage" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" class="w-full h-full object-cover" alt="preview">
+                            <div id="manualWatermarkPreview" class="absolute text-white font-bold tracking-tight text-[18px] drop-shadow-lg select-none" style="left:50%;bottom:9%;transform:translateX(-50%);">XbotGo</div>
+                        </div>
+                        <div class="flex items-center justify-between py-4 mb-3">
+                            <p class="text-[14px] font-semibold">水印设置</p>
+                            <button type="button" id="manualWatermarkToggle" onclick="toggleManualWatermark()" class="relative w-[54px] h-[32px] rounded-full bg-[#ffd400] transition active:scale-95">
+                                <span id="manualWatermarkKnob" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-white shadow"></span>
+                            </button>
+                        </div>
+                        <div id="manualWatermarkControls" class="space-y-5">
+                            <div>
+                                <p class="text-[14px] font-semibold mb-3">样式</p>
+                                <div class="grid grid-cols-1 gap-4">
+                                    <button type="button" data-watermark-style="xbotgo" class="manual-watermark-style h-20 rounded-[14px] bg-white/12 text-white text-[16px] font-semibold border-2 border-[#ffd400]">XbotGo</button>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-[14px] font-semibold mb-3">位置</p>
+                                <div class="grid grid-cols-5 gap-3">
+                                    <button type="button" onclick="setManualWatermarkPosition('bottom-center')" data-watermark-pos="bottom-center" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white text-[15px] font-semibold border-2 border-[#ffd400]">底中</button>
+                                    <button type="button" onclick="setManualWatermarkPosition('top-left')" data-watermark-pos="top-left" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white/70 text-[15px] font-semibold border border-transparent">左上</button>
+                                    <button type="button" onclick="setManualWatermarkPosition('top-right')" data-watermark-pos="top-right" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white/70 text-[15px] font-semibold border border-transparent">右上</button>
+                                    <button type="button" onclick="setManualWatermarkPosition('bottom-left')" data-watermark-pos="bottom-left" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white/70 text-[15px] font-semibold border border-transparent">左下</button>
+                                    <button type="button" onclick="setManualWatermarkPosition('bottom-right')" data-watermark-pos="bottom-right" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white/70 text-[15px] font-semibold border border-transparent">右下</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1595,7 +1693,19 @@
                                         </div>
                                         `);
                                     }
-                                </script>
+                                    syncManualWatermarkUI();
+
+        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        (function ensureManualExportFlowMounted(){
+            const workspace = document.getElementById('manualEditorWorkspace');
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const donePage = document.getElementById('manualExportDonePage');
+            if (workspace) {
+                if (progressPage) workspace.appendChild(progressPage);
+                if (donePage) workspace.appendChild(donePage);
+            }
+        })();
+    </script>
                             </div>
                         </div>
 
@@ -3082,10 +3192,10 @@
             if (!selectView || !workspaceView) return;
             selectView.classList.add('hidden');
             workspaceView.classList.remove('hidden');
-            applyManualPreviewRatio(document.getElementById('manualRatioLabel')?.innerText || '16:9');
+            applyManualPreviewRatio(document.getElementById('manualRatioLabel')?.innerText || '默认');
             closeManualRatioMenu();
             closeManualSubtool();
-            showManualTimelineGuide();
+            /* showManualTimelineGuide deferred */
             setManualExportPreset('默认');
             manualExportCustomEnabled = false;
         }
@@ -3127,12 +3237,31 @@
 
         function showManualTimelineGuide() {
             const guide = document.getElementById('manualTimelineGuide');
-            if (!guide) return;
+            const workspaceView = document.getElementById('manualEditorWorkspace');
+            if (!guide || !workspaceView) return;
             guide.classList.remove('hidden');
-            if (manualTimelineGuideTimer) clearTimeout(manualTimelineGuideTimer);
-            manualTimelineGuideTimer = setTimeout(() => {
+
+            const dismiss = function() {
                 hideManualTimelineGuide();
-            }, 2600);
+                workspaceView.removeEventListener('click', dismiss);
+                document.removeEventListener('keydown', escDismiss);
+            };
+            const escDismiss = function(e) {
+                if (e.key === 'Escape') dismiss();
+            };
+
+            if (manualTimelineGuideTimer) clearTimeout(manualTimelineGuideTimer);
+
+            // Delay binding the click-to-dismiss to avoid closing on the same click that enters the editor
+            setTimeout(() => {
+                workspaceView.removeEventListener('click', dismiss);
+                workspaceView.addEventListener('click', dismiss);
+                document.addEventListener('keydown', escDismiss);
+            }, 120);
+
+            manualTimelineGuideTimer = setTimeout(() => {
+                dismiss();
+            }, 1600);
         }
 
         function hideManualTimelineGuide() {
@@ -3164,16 +3293,20 @@
         function applyManualPreviewRatio(ratio) {
             const stage = document.getElementById('manualPreviewStage');
             const frame = document.getElementById('manualPreviewFrame');
+            const fg = document.getElementById('manualPreviewImage');
+            const bg = document.getElementById('manualPreviewBlurBg');
             if (!stage || !frame) return;
 
             const ratioMap = {
+                '默认': 9 / 16,
                 '16:9': 16 / 9,
                 '9:16': 9 / 16,
                 '1:1': 1,
                 '3:4': 3 / 4,
                 '4:3': 4 / 3,
             };
-            const target = ratioMap[ratio] || (16 / 9);
+            const originalRatio = 9 / 16;
+            const target = ratioMap[ratio] || originalRatio;
             const stageRect = stage.getBoundingClientRect();
             const maxW = stageRect.width;
             const maxH = stageRect.height;
@@ -3187,6 +3320,14 @@
 
             frame.style.width = `${width}px`;
             frame.style.height = `${height}px`;
+
+            const isMismatch = Math.abs(target - originalRatio) > 0.01;
+            if (fg) fg.classList.toggle('object-contain', isMismatch);
+            if (fg) fg.classList.toggle('object-cover', !isMismatch);
+            if (bg) {
+                bg.classList.toggle('is-visible', isMismatch);
+                bg.style.display = isMismatch ? 'block' : 'none';
+            }
         }
 
         function setManualRatio(ratio) {
@@ -3281,35 +3422,44 @@
             });
             const list = document.getElementById('manualSoundFxList');
             if (!list) return;
-            if (cat === 'fast') {
-                list.innerHTML = `
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效1</p><p class="text-[12px] text-white/45 mt-0.5">00:02</p></div></div>
-                        <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
+            const soundFxMap = {
+                basketball: [
+                    { name: '音效1', duration: '00:05', badge: 'paid' },
+                    { name: '音效2', duration: '00:03' },
+                    { name: '音效3', duration: '00:04' }
+                ],
+                football: [
+                    { name: '音效1', duration: '00:02' },
+                    { name: '音效2', duration: '00:01', badge: 'limited' },
+                    { name: '音效3', duration: '00:03' }
+                ],
+                tennis: [
+                    { name: '音效1', duration: '00:03' },
+                    { name: '音效2', duration: '00:02' },
+                    { name: '音效3', duration: '00:04' }
+                ],
+                other: [
+                    { name: '音效1', duration: '00:04' },
+                    { name: '音效2', duration: '00:02' },
+                    { name: '音效3', duration: '00:05' }
+                ]
+            };
+            const currentList = soundFxMap[cat] || soundFxMap.basketball;
+            list.innerHTML = currentList.map(({ name, duration, badge }) => `
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center min-w-0 gap-3">
+                        <i class="fa-solid fa-music text-[22px] text-white/90"></i>
+                        <div class="min-w-0">
+                            <p class="text-[14px] font-medium truncate inline-flex items-center gap-1.5">
+                                ${name}
+                                ${badge === 'paid' ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-rose-500/95 text-white text-[10px] font-bold shadow-sm">付费</span>' : ''}
+                                ${badge === 'limited' ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/95 text-gray-900 text-[10px] font-bold shadow-sm">限免</span>' : ''}
+                            </p>
+                            <p class="text-[12px] text-white/45 mt-0.5">${duration}</p>
+                        </div>
                     </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效2</p><p class="text-[12px] text-white/45 mt-0.5">00:01</p></div></div>
-                        <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效2</p><p class="text-[12px] text-white/45 mt-0.5">00:03</p></div></div>
-                        <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
-                    </div>`;
-            } else {
-                list.innerHTML = `
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效1</p><p class="text-[12px] text-white/45 mt-0.5">00:05</p></div></div>
-                        <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效2</p><p class="text-[12px] text-white/45 mt-0.5">00:03</p></div></div>
-                        <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center min-w-0 gap-3"><i class="fa-solid fa-music text-[22px] text-white/90"></i><div class="min-w-0"><p class="text-[14px] font-medium truncate">音效1</p><p class="text-[12px] text-white/45 mt-0.5">00:04</p></div></div>
-                        <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
-                    </div>`;
-            }
+                    <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
+                </div>`).join('');
         }
 
         function setManualFxCategory(cat) {
@@ -3428,9 +3578,11 @@
             const mask = document.getElementById('manualExportMask');
             const sheet = document.getElementById('manualExportSheet');
             const detail = document.getElementById('manualExportDetailSheet');
+            manualExportMode = 'preset';
             if (mask) mask.classList.remove('hidden');
             if (sheet) sheet.classList.remove('hidden');
             if (detail) detail.classList.add('hidden');
+            refreshManualExportMode();
         }
 
         function closeManualExportSheet() {
@@ -3440,50 +3592,359 @@
             if (mask) mask.classList.add('hidden');
             if (sheet) sheet.classList.add('hidden');
             if (detail) detail.classList.add('hidden');
+            closeManualWatermarkSheet();
         }
 
         function openManualExportDetail() {
             const detail = document.getElementById('manualExportDetailSheet');
             if (detail) detail.classList.remove('hidden');
+            refreshManualExportMode();
         }
 
         function closeManualExportDetail() {
             const detail = document.getElementById('manualExportDetailSheet');
             if (detail) detail.classList.add('hidden');
+            closeManualWatermarkSheet();
+        }
+
+        let manualExportMode = 'preset';
+        let manualCustomSelections = {
+            resolution: '1080P',
+            fps: '30FPS',
+            bitrate: '10'
+        };
+
+        function refreshManualExportMode() {
+            const presetBlock = document.getElementById('manualExportPresetBlock');
+            const presetModeBtn = document.getElementById('manualExportPresetModeBtn');
+            const presetList = document.getElementById('manualExportPresetList');
+            const presetIndicator = document.getElementById('manualExportPresetIndicator');
+            const customHint = document.getElementById('manualExportCustomHint');
+            const customSection = document.getElementById('manualExportCustomSection');
+            const customToggle = document.getElementById('manualExportCustomToggle');
+            const customDot = document.getElementById('manualExportCustomDot');
+            const watermarkBlock = document.getElementById('manualWatermarkBlock');
+            const presetActive = manualExportMode === 'preset';
+
+            if (presetBlock) {
+                presetBlock.classList.toggle('opacity-45', !presetActive);
+            }
+            if (presetModeBtn) {
+                presetModeBtn.classList.remove('pointer-events-none');
+                presetModeBtn.classList.toggle('text-[#111]', presetActive);
+                presetModeBtn.classList.toggle('text-[#8f8f95]', !presetActive);
+            }
+            if (presetList) {
+                presetList.classList.toggle('pointer-events-none', !presetActive);
+                presetList.classList.toggle('opacity-55', !presetActive);
+            }
+            if (presetIndicator) {
+                presetIndicator.classList.toggle('border-[#ffd400]', presetActive);
+                presetIndicator.classList.toggle('border-[#dedee3]', !presetActive);
+                const inner = presetIndicator.querySelector('span');
+                if (inner) {
+                    inner.classList.toggle('bg-[#ffd400]', presetActive);
+                    inner.classList.toggle('bg-transparent', !presetActive);
+                }
+            }
+            if (customHint) {
+                customHint.classList.toggle('text-[#111]', !presetActive);
+                customHint.classList.toggle('text-[#a1a1a8]', presetActive);
+            }
+            if (customSection) {
+                customSection.classList.toggle('opacity-40', presetActive);
+                customSection.classList.toggle('pointer-events-none', presetActive);
+            }
+            if (customToggle) {
+                customToggle.classList.toggle('border-[#dedee3]', presetActive);
+                customToggle.classList.toggle('border-[#ffd400]', !presetActive);
+                customToggle.classList.toggle('bg-white', presetActive);
+                customToggle.classList.toggle('bg-[#fff7b3]', !presetActive);
+            }
+            if (customDot) {
+                customDot.classList.toggle('bg-transparent', presetActive);
+                customDot.classList.toggle('bg-[#ffd400]', !presetActive);
+            }
+            if (watermarkBlock) {
+                watermarkBlock.classList.remove('opacity-40','pointer-events-none');
+            }
+        }
+
+        function setManualExportMode(mode) {
+            manualExportMode = mode;
+            refreshManualExportMode();
         }
 
         function setManualExportPreset(name) {
+            if (manualExportMode !== 'preset') return;
             const label = document.getElementById('manualExportPresetLabel');
             if (label) label.innerText = '1080P/30FPS';
             document.querySelectorAll('.manual-export-preset').forEach(btn => {
                 const active = btn.getAttribute('data-export-preset') === name;
                 btn.classList.toggle('bg-[#ffd400]', active);
                 btn.classList.toggle('text-black', active);
+                btn.classList.toggle('border-[#ffd400]', active);
                 btn.classList.toggle('bg-white', !active);
                 btn.classList.toggle('text-[#222]', !active);
+                btn.classList.toggle('border-[#ececf0]', !active);
+            });
+            setManualExportMode('preset');
+        }
+
+        function setManualCustomOption(group, value) {
+            if (manualExportMode !== 'custom') return;
+            manualCustomSelections[group] = value;
+            document.querySelectorAll(`[data-custom-group="${group}"]`).forEach(btn => {
+                const active = btn.getAttribute('data-custom-value') === value;
+                btn.classList.toggle('bg-[#fff2a8]', active);
+                btn.classList.toggle('border-[#ffd400]', active);
+                btn.classList.toggle('text-black', active);
+                btn.classList.toggle('font-semibold', active);
+                btn.classList.toggle('bg-white', !active);
+                btn.classList.toggle('border-[#ececf0]', !active);
+                btn.classList.toggle('text-[#666]', !active);
+                btn.classList.toggle('font-medium', !active);
             });
         }
 
-        let manualExportCustomEnabled = false;
-        function toggleManualExportCustom() {
-            manualExportCustomEnabled = !manualExportCustomEnabled;
-            const section = document.getElementById('manualExportCustomSection');
-            const btn = document.getElementById('manualExportCustomToggle');
-            const dot = document.getElementById('manualExportCustomDot');
-            if (section) {
-                section.classList.toggle('opacity-40', !manualExportCustomEnabled);
-                section.classList.toggle('pointer-events-none', !manualExportCustomEnabled);
+        let manualWatermarkEnabled = true;
+        let manualWatermarkStyle = 'xbotgo';
+        let manualWatermarkPosition = 'bottom-center';
+
+        function openManualWatermarkSheet() {
+            const sheet = document.getElementById('manualWatermarkSheet');
+            if (sheet) sheet.classList.remove('hidden');
+            const previewImg = document.getElementById('manualWatermarkPreviewImage');
+            const mainPreviewImg = document.getElementById('manualPreviewImage');
+            if (previewImg && mainPreviewImg && mainPreviewImg.getAttribute('src')) {
+                previewImg.setAttribute('src', mainPreviewImg.getAttribute('src'));
             }
-            if (btn) {
-                btn.classList.toggle('border-[#dedee3]', !manualExportCustomEnabled);
-                btn.classList.toggle('border-[#ffd400]', manualExportCustomEnabled);
-                btn.classList.toggle('bg-white', !manualExportCustomEnabled);
-                btn.classList.toggle('bg-[#fff7b3]', manualExportCustomEnabled);
+            syncManualWatermarkUI();
+
+        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        (function ensureManualExportFlowMounted(){
+            const workspace = document.getElementById('manualEditorWorkspace');
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const donePage = document.getElementById('manualExportDonePage');
+            if (workspace) {
+                if (progressPage) workspace.appendChild(progressPage);
+                if (donePage) workspace.appendChild(donePage);
             }
-            if (dot) {
-                dot.classList.toggle('bg-transparent', !manualExportCustomEnabled);
-                dot.classList.toggle('bg-[#ffd400]', manualExportCustomEnabled);
+        })();
+        }
+
+        function closeManualWatermarkSheet() {
+            const sheet = document.getElementById('manualWatermarkSheet');
+            if (sheet) sheet.classList.add('hidden');
+        }
+
+        function toggleManualWatermark() {
+            manualWatermarkEnabled = !manualWatermarkEnabled;
+            syncManualWatermarkUI();
+
+        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        (function ensureManualExportFlowMounted(){
+            const workspace = document.getElementById('manualEditorWorkspace');
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const donePage = document.getElementById('manualExportDonePage');
+            if (workspace) {
+                if (progressPage) workspace.appendChild(progressPage);
+                if (donePage) workspace.appendChild(donePage);
             }
+        })();
+        }
+
+        function setManualWatermarkPosition(position) {
+            manualWatermarkPosition = position;
+            syncManualWatermarkUI();
+
+        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        (function ensureManualExportFlowMounted(){
+            const workspace = document.getElementById('manualEditorWorkspace');
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const donePage = document.getElementById('manualExportDonePage');
+            if (workspace) {
+                if (progressPage) workspace.appendChild(progressPage);
+                if (donePage) workspace.appendChild(donePage);
+            }
+        })();
+        }
+
+        function syncManualWatermarkUI() {
+            const preview = document.getElementById('manualWatermarkPreview');
+            const editorPreview = document.getElementById('manualEditorWatermarkPreview');
+            const toggle = document.getElementById('manualWatermarkToggle');
+            const knob = document.getElementById('manualWatermarkKnob');
+            const controls = document.getElementById('manualWatermarkControls');
+            const statusText = document.getElementById('manualWatermarkStatusText');
+            const posMap = {
+                'bottom-center': {left:'50%', bottom:'9%', transform:'translateX(-50%)'},
+                'top-left': {left:'5%', top:'6%'},
+                'top-right': {right:'5%', top:'6%'},
+                'bottom-left': {left:'5%', bottom:'9%'},
+                'bottom-right': {right:'5%', bottom:'9%'}
+            };
+            const cfg = posMap[manualWatermarkPosition] || posMap['bottom-center'];
+            [preview, editorPreview].forEach((node) => {
+                if (!node) return;
+                node.innerText = 'XbotGo';
+                node.style.opacity = manualWatermarkEnabled ? '1' : '0';
+                node.style.left = '';
+                node.style.right = '';
+                node.style.top = '';
+                node.style.bottom = '';
+                node.style.transform = '';
+                Object.entries(cfg).forEach(([k,v]) => node.style[k] = v);
+            });
+            if (toggle) {
+                toggle.classList.toggle('bg-[#ffd400]', manualWatermarkEnabled);
+                toggle.classList.toggle('bg-white/20', !manualWatermarkEnabled);
+            }
+            if (knob) {
+                knob.classList.toggle('right-1', manualWatermarkEnabled);
+                knob.classList.toggle('left-1', !manualWatermarkEnabled);
+            }
+            if (controls) {
+                controls.classList.toggle('opacity-45', !manualWatermarkEnabled);
+                controls.classList.toggle('pointer-events-none', !manualWatermarkEnabled);
+            }
+            if (statusText) statusText.innerText = manualWatermarkEnabled ? '已开启' : '已关闭';
+            document.querySelectorAll('.manual-watermark-style').forEach(btn => {
+                const active = btn.getAttribute('data-watermark-style') === manualWatermarkStyle;
+                btn.classList.toggle('border-2', active);
+                btn.classList.toggle('border-[#ffd400]', active);
+                btn.classList.toggle('text-white', active);
+                btn.classList.toggle('text-white/70', !active);
+            });
+            document.querySelectorAll('.manual-watermark-pos').forEach(btn => {
+                const active = btn.getAttribute('data-watermark-pos') === manualWatermarkPosition;
+                btn.classList.toggle('border-2', active);
+                btn.classList.toggle('border-[#ffd400]', active);
+                btn.classList.toggle('text-white', active);
+                btn.classList.toggle('text-white/70', !active);
+            });
+        }
+
+        let manualExportProgressTimer = null;
+
+        function startManualSaveExport() {
+            closeManualExportSheet();
+            closeManualExportDetail();
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const donePage = document.getElementById('manualExportDonePage');
+            const progressText = document.getElementById('manualExportProgressText');
+            const progressImage = document.getElementById('manualExportProgressImage');
+            const previewImage = document.getElementById('manualPreviewImage');
+            const ring = document.getElementById('manualExportRing');
+            const title = document.getElementById('manualExportStatusTitle');
+            const desc = document.getElementById('manualExportStatusDesc');
+            const share = document.getElementById('manualExportShareSection');
+            if (previewImage && progressImage && previewImage.getAttribute('src')) {
+                progressImage.setAttribute('src', previewImage.getAttribute('src'));
+            }
+            if (donePage) {
+                donePage.classList.add('hidden');
+                donePage.style.display = 'none';
+            }
+            if (progressPage) {
+                progressPage.classList.remove('hidden');
+                progressPage.style.display = 'block';
+            }
+            if (title) title.innerText = '正在努力保存中';
+            if (desc) desc.innerHTML = '将 App 切换到后台将暂停保存，在不重启 App 的情况下切换回前台可继续保存。<br>温馨提示：导出后的视频不支持 AI 分析。';
+            if (share) { share.classList.add('hidden'); share.style.display = 'none'; }
+            let progress = 28;
+            if (ring) ring.style.background = `conic-gradient(#ffd400 ${progress}%, rgba(255,255,255,0.14) 0)`;
+            if (progressText) progressText.innerText = progress + '%';
+            if (manualExportProgressTimer) clearInterval(manualExportProgressTimer);
+            manualExportProgressTimer = setInterval(() => {
+                progress += progress < 80 ? 12 : (progress < 96 ? 4 : 2);
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(manualExportProgressTimer);
+                    manualExportProgressTimer = null;
+                    if (ring) ring.style.background = 'conic-gradient(#ffd400 100%, rgba(255,255,255,0.14) 0)';
+                    if (progressText) progressText.innerText = '100%';
+                    setTimeout(showManualSaveDonePage, 350);
+                    return;
+                }
+                if (ring) ring.style.background = `conic-gradient(#ffd400 ${progress}%, rgba(255,255,255,0.14) 0)`;
+                if (progressText) progressText.innerText = progress + '%';
+            }, 420);
+        }
+
+        function showManualSaveDonePage() {
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const progressText = document.getElementById('manualExportProgressText');
+            const title = document.getElementById('manualExportStatusTitle');
+            const desc = document.getElementById('manualExportStatusDesc');
+            const share = document.getElementById('manualExportShareSection');
+            const ring = document.getElementById('manualExportRing');
+            if (progressPage) {
+                progressPage.classList.remove('hidden');
+                progressPage.style.display = 'block';
+            }
+            if (progressText) progressText.innerText = '100%';
+            if (title) title.innerText = '已完成';
+            if (desc) desc.innerHTML = '视频已保存到本地相册。<br>导出后的视频不支持 AI 分析。';
+            if (share) { share.classList.remove('hidden'); share.style.display = 'block'; }
+            if (ring) ring.style.background = 'conic-gradient(#ffd400 100%, rgba(255,255,255,0.14) 0)';
+        }
+
+        function closeManualSaveFlow() {
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const donePage = document.getElementById('manualExportDonePage');
+            if (manualExportProgressTimer) {
+                clearInterval(manualExportProgressTimer);
+                manualExportProgressTimer = null;
+            }
+            closeManualShareConfirm();
+            if (progressPage) {
+                progressPage.classList.add('hidden');
+                progressPage.style.display = 'none';
+            }
+            if (donePage) {
+                donePage.classList.add('hidden');
+                donePage.style.display = 'none';
+            }
+        }
+
+        let manualShareTarget = '';
+        function openManualShareConfirm(platform) {
+            manualShareTarget = platform || '';
+            const mask = document.getElementById('manualShareConfirmMask');
+            const dialog = document.getElementById('manualShareConfirmDialog');
+            const text = document.getElementById('manualShareConfirmText');
+            if (text) {
+                text.innerHTML = `是否跳转到 <span class="text-white font-semibold">${manualShareTarget}</span> App 继续分享当前视频？`;
+            }
+            if (mask) {
+                mask.classList.remove('hidden');
+                mask.style.display = 'block';
+            }
+            if (dialog) {
+                dialog.classList.remove('hidden');
+                dialog.style.display = 'block';
+            }
+        }
+
+        function closeManualShareConfirm() {
+            const mask = document.getElementById('manualShareConfirmMask');
+            const dialog = document.getElementById('manualShareConfirmDialog');
+            if (mask) {
+                mask.classList.add('hidden');
+                mask.style.display = 'none';
+            }
+            if (dialog) {
+                dialog.classList.add('hidden');
+                dialog.style.display = 'none';
+            }
+        }
+
+        function confirmManualShare() {
+            const target = manualShareTarget || '目标';
+            closeManualShareConfirm();
+            alert(`已为你发起跳转到${target} App 的分享提示。`);
         }
 
         function startHighlightExport() {
@@ -3527,8 +3988,9 @@
             const exportMask = document.getElementById('manualExportMask');
             const exportSheet = document.getElementById('manualExportSheet');
             const exportDetail = document.getElementById('manualExportDetailSheet');
+            const watermarkSheet = document.getElementById('manualWatermarkSheet');
             if (exportMask && !exportMask.classList.contains('hidden')) {
-                const insideSheet = (exportSheet && exportSheet.contains(event.target)) || (exportDetail && !exportDetail.classList.contains('hidden') && exportDetail.contains(event.target));
+                const insideSheet = (exportSheet && exportSheet.contains(event.target)) || (exportDetail && !exportDetail.classList.contains('hidden') && exportDetail.contains(event.target)) || (watermarkSheet && !watermarkSheet.classList.contains('hidden') && watermarkSheet.contains(event.target));
                 const onOpenBtn = event.target.closest('button')?.getAttribute('onclick') === 'openManualExportSheet()';
                 if (!insideSheet && !onOpenBtn) {
                     closeManualExportSheet();
@@ -3536,11 +3998,56 @@
             }
         });
 
+        syncManualWatermarkUI();
+
+        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        (function ensureManualExportFlowMounted(){
+            const workspace = document.getElementById('manualEditorWorkspace');
+            const progressPage = document.getElementById('manualExportProgressPage');
+            const donePage = document.getElementById('manualExportDonePage');
+            if (workspace) {
+                if (progressPage) workspace.appendChild(progressPage);
+                if (donePage) workspace.appendChild(donePage);
+            }
+        })();
+
         window.addEventListener('resize', function() {
             const workspace = document.getElementById('manualEditorWorkspace');
             if (!workspace || workspace.classList.contains('hidden')) return;
-            applyManualPreviewRatio(document.getElementById('manualRatioLabel')?.innerText || '16:9');
+            applyManualPreviewRatio(document.getElementById('manualRatioLabel')?.innerText || '默认');
         });
 </script>
+
+
+
+
+<script>
+(function(){
+  function bindManualGuideAfterMaterialSelection(){
+    var nextBtns = Array.from(document.querySelectorAll('button, div, a')).filter(function(el){
+      var t = (el.innerText || el.textContent || '').replace(/\s+/g,'').trim();
+      return t === '下一步';
+    });
+    if(!nextBtns.length) return;
+
+    nextBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        setTimeout(function(){
+          if (typeof showManualTimelineGuide === 'function') {
+            showManualTimelineGuide();
+          }
+        }, 450);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindManualGuideAfterMaterialSelection, {once:true});
+  } else {
+    bindManualGuideAfterMaterialSelection();
+  }
+})();
+</script>
+
 </body>
 </html>
