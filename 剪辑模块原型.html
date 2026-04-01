@@ -78,6 +78,26 @@
         .manual-preview-bg.is-visible { opacity: .95; }
         .manual-preview-foreground { position: relative; z-index: 1; width: 100%; height: 100%; }
     
+
+        #manualEditorWorkspace::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(255,255,255,0.06), transparent 24%);
+            pointer-events: none;
+        }
+        #manualToolMainBar button i { opacity: .92; }
+        #manualToolMainBar button span { color: rgba(255,255,255,.84); }
+        #manualSubtoolBar button span { color: rgba(255,255,255,.84); }
+        #manualTextStickerBar button,
+        #manualAudioBar button,
+        #manualFxBar button {
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
 </style>
 </head>
 <body class="bg-slate-100 flex justify-center items-center h-screen font-sans">
@@ -137,22 +157,70 @@
                         </div>
                     </section>
 
-                    <!-- 新模板上新：仅保留可点击的 banner 入口，放在 My Projects 上方 -->
+                    <!-- 新模板上新 / 比赛报告：双页横向切换入口 -->
                     <section>
-                        <button type="button" onclick="openRecommendAllPage()" class="w-full rounded-[22px] overflow-hidden border border-gray-100 shadow-sm bg-white active:scale-[0.99] transition text-left">
-                            <div class="relative h-[104px]">
-                                <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover" alt="新模板上新">
-                                <div class="absolute inset-0 bg-gradient-to-r from-black/25 via-transparent to-black/10"></div>
-                                <span class="absolute top-3 left-3 px-2 py-1 rounded-full bg-white/90 text-[10px] font-bold text-gray-700">模板合集</span>
-                                <div class="absolute left-4 bottom-4 text-white">
-                                    <p class="text-[22px] font-black tracking-wide leading-none">新模板上新</p>
-                                    <p class="text-[11px] mt-1 text-white/90">本周推荐模板，集中查看与体验</p>
+                        <div class="w-full overflow-hidden" id="homeFeatureCarouselWrap">
+                            <div id="homeFeatureCarousel" class="flex w-[200%] transition-transform duration-300 ease-out" style="transform: translateX(0%);">
+                                <div class="w-1/2 shrink-0 pr-1.5">
+                                    <button type="button" onclick="openRecommendAllPage()" class="w-full rounded-[22px] overflow-hidden border border-gray-100 shadow-sm bg-white active:scale-[0.99] transition text-left">
+                                        <div class="relative h-[104px]">
+                                            <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover" alt="新模板上新">
+                                            <div class="absolute inset-0 bg-gradient-to-r from-black/25 via-transparent to-black/10"></div>
+                                            <span class="absolute top-3 left-3 px-2 py-1 rounded-full bg-white/90 text-[10px] font-bold text-gray-700">模板合集</span>
+                                            <div class="absolute left-4 bottom-4 text-white">
+                                                <p class="text-[22px] font-black tracking-wide leading-none">新模板上新</p>
+                                                <p class="text-[11px] mt-1 text-white/90">本周推荐模板，集中查看与体验</p>
+                                            </div>
+                                            <div class="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-gray-800 text-[12px] font-bold px-3 py-2 rounded-xl shadow-sm">
+                                                立即体验
+                                            </div>
+                                        </div>
+                                    </button>
                                 </div>
-                                <div class="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-gray-800 text-[12px] font-bold px-3 py-2 rounded-xl shadow-sm">
-                                    立即体验
+
+                                <div class="w-1/2 shrink-0 pl-1.5">
+                                    <div class="w-[calc(100%+6px)] -ml-1.5 h-[104px] rounded-[22px] overflow-hidden border border-gray-100 shadow-sm bg-[#0B1745] flex" aria-label="比赛报告入口">
+                                        <div class="w-[114px] h-full bg-[#F59E0B] px-4 pt-3.5 pb-3 flex flex-col">
+                                            <p class="text-[15px] font-black text-white tracking-[0.01em] leading-none">比赛报告</p>
+                                            <div class="mt-3.5 flex items-start gap-2.5">
+                                                <div class="w-[46px] h-[46px] rounded-[13px] bg-[#A96B00] shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] flex items-center justify-center text-white text-[17px]">
+                                                    <i class="fa-solid fa-table-cells-large"></i>
+                                                </div>
+                                                <div class="w-[46px] h-[46px] rounded-[13px] bg-[#A96B00] shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] flex items-center justify-center text-white text-[17px]">
+                                                    <i class="fa-solid fa-chart-line"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="relative flex-1 bg-[#0B1745] overflow-hidden">
+                                            <div class="absolute inset-0 opacity-70" style="background-image: radial-gradient(rgba(125,147,255,0.5) 1.05px, transparent 1.05px); background-size: 14px 14px;"></div>
+                                            <div class="relative h-full px-2.5 pt-3 pb-3 flex items-end">
+                                                <div class="flex gap-2 w-full">
+                                                    <button type="button" onclick="openMatchReportVersion('basic')" class="relative w-[46%] rounded-[16px] bg-[#F59E0B] h-[64px] px-3 py-2 text-left shadow-[0_8px_18px_rgba(0,0,0,0.16)] active:scale-[0.98] transition overflow-hidden">
+                                                        <span class="absolute top-1.5 right-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full bg-white text-[#7A4F00] text-[8px] font-black leading-none">付费</span>
+                                                        <p class="text-[12px] font-black text-white leading-none mt-[11px]">基础版</p>
+                                                        <p class="text-[9px] text-white/90 mt-1 leading-[1.25] tracking-[0.005em]">模板成片与基础报告</p>
+                                                    </button>
+
+                                                    <button type="button" onclick="openMatchReportVersion('pro')" class="relative flex-1 rounded-[16px] bg-[#0A1440] h-[64px] px-2.5 py-2 text-left border border-[#3A4C9C] ring-1 ring-inset ring-[#2B3B86] shadow-[0_8px_18px_rgba(0,0,0,0.16)] overflow-hidden active:scale-[0.98] transition">
+                                                        <span class="absolute top-1.5 right-1.5 inline-flex items-center px-1.5 py-0.5 rounded-full bg-white text-[#25367E] text-[8px] font-black leading-none z-10">PRO</span>
+                                                        <div class="absolute inset-0 opacity-75" style="background-image: radial-gradient(rgba(118,136,255,0.52) 1px, transparent 1px); background-size: 12px 12px;"></div>
+                                                        <div class="relative h-full flex flex-col justify-between">
+                                                            <p class="text-[12px] font-black text-white leading-none pr-[34px] mt-[11px] whitespace-nowrap">Pro 完整版</p>
+                                                            <p class="text-[9px] text-white mt-1 leading-[1.25] tracking-[0.005em]">深度数据与完整可视化</p>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </button>
+                            <div class="mt-2 flex items-center justify-center gap-1.5">
+                                <button type="button" id="homeFeatureDot0" onclick="setHomeFeaturePage(0)" aria-label="查看新模板上新" class="w-4 h-1.5 rounded-full bg-gray-900 transition-all"></button>
+                                <button type="button" id="homeFeatureDot1" onclick="setHomeFeaturePage(1)" aria-label="查看比赛报告" class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all"></button>
+                            </div>
+                        </div>
                     </section>
 
                     <!-- My Projects：新入口（云空间/草稿箱/已导出） -->
@@ -355,8 +423,8 @@
 
             <!-- 页面：图库 -->
             <div id="pageGallery" class="page-view hidden px-5 pt-4">
-                <h2 class="text-lg font-semibold text-gray-900 mb-3">图库</h2>
-                <p class="text-xs text-gray-400 mb-4">从本地相册或设备中选择素材，发起新建项目或一键成片。</p>
+                <h2 class="text-[17px] font-medium tracking-[-0.01em] text-gray-900 mb-2.5">图库</h2>
+                <p class="text-[12px] text-gray-400 mb-4">从本地相册或设备中选择素材，发起新建项目或一键成片。</p>
                 <div class="grid grid-cols-3 gap-2">
                     <div class="relative aspect-[4/5] rounded-xl overflow-hidden bg-gray-200">
                         <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover">
@@ -370,7 +438,7 @@
                         + 更多占位
                     </div>
                 </div>
-                <button class="mt-6 w-full bg-black text-white text-[14px] font-bold py-3 rounded-2xl active:scale-95 transition" onclick="openNewProjectFlow(); markManualEditorOpen()">
+                <button class="mt-6 w-full bg-black text-white text-[13px] font-medium py-3 rounded-[16px] active:scale-95 transition" onclick="openNewProjectFlow(); markManualEditorOpen()">
                     选中素材后新建项目
                 </button>
             </div>
@@ -657,10 +725,10 @@
                         <div class="px-6 pt-6 flex flex-col items-center text-center">
                             <h3 id="manualExportStatusTitle" class="mt-6 text-[20px] font-bold">正在努力保存中</h3>
                             <p id="manualExportStatusDesc" class="mt-3 text-[13px] leading-5 text-white/55 max-w-[300px]">将 App 切换到后台将暂停保存，在不重启 App 的情况下切换回前台可继续保存。<br>温馨提示：导出后的视频不支持 AI 分析。</p>
-                            <div id="manualExportRing" class="mt-8 w-full max-w-[320px] rounded-[28px] p-[6px] shadow-[0_12px_32px_rgba(0,0,0,0.28)]" style="background: conic-gradient(#ffd400 28%, rgba(255,255,255,0.14) 0);">
+                            <div id="manualExportRing" class="mt-8 w-full max-w-[320px] rounded-[28px] p-[6px] shadow-[0_12px_32px_rgba(0,0,0,0.28)]" style="background: conic-gradient(#ff7a00 28%, rgba(255,255,255,0.14) 0);">
                                 <div class="rounded-[22px] overflow-hidden border border-white/15 bg-white/5">
                                     <div class="relative aspect-[1.72/1] bg-black">
-                                        <img id="manualExportProgressImage" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" class="w-full h-full object-cover opacity-80" alt="export progress">
+                                        <img id="manualExportProgressImage" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" class="w-full h-full object-cover opacity-80" alt="export progress">
                                         <div class="absolute inset-0 bg-black/25"></div>
                                         <div id="manualExportProgressText" class="absolute inset-0 flex items-center justify-center text-white text-[56px] font-extrabold tracking-tight">28%</div>
                                     </div>
@@ -681,7 +749,7 @@
                             <p id="manualShareConfirmText" class="mt-3 text-[14px] leading-6 text-white/70">是否跳转到对应社交 App 进行分享？</p>
                             <div class="mt-5 grid grid-cols-2 gap-3">
                                 <button type="button" onclick="closeManualShareConfirm()" class="h-11 rounded-[14px] bg-white/10 text-white/80 text-[15px] font-semibold active:scale-95 transition">取消</button>
-                                <button type="button" onclick="confirmManualShare()" class="h-11 rounded-[14px] bg-[#ffd400] text-black text-[15px] font-semibold active:scale-95 transition">确定</button>
+                                <button type="button" onclick="confirmManualShare()" class="h-11 rounded-[14px] bg-[#ff7a00] text-white text-[15px] font-semibold active:scale-95 transition">确定</button>
                             </div>
                         </div>
                     </div>
@@ -693,7 +761,7 @@
         </div>
 
         <!-- 底部导航栏：5 栏 (首页 / 图库 / 相机 / 创作中心 / 我的) -->
-        <div class="h-[72px] bg-white/95 backdrop-blur border-t border-gray-100 flex justify-around items-center pb-3 pt-1 text-[11px] font-medium z-10">
+        <div class="h-[64px] bg-white/95 backdrop-blur border-t border-gray-100 flex justify-around items-center pb-0 pt-0 text-[11px] font-medium z-10">
             <button type="button" id="bottomTabHome" class="bottom-tab flex flex-col items-center text-gray-400 active:scale-95 transition space-y-0.5" data-tab="home" onclick="handleManualEditorLeave(); restoreStudioHome(); setBottomTab('home');">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span>首页</span>
@@ -702,7 +770,7 @@
                 <i class="fa-solid fa-images text-lg"></i>
                 <span>图库</span>
             </button>
-            <button type="button" id="bottomTabCamera" class="bottom-tab flex flex-col items-center -mt-6" data-tab="camera" onclick="handleManualEditorLeave(); setBottomTab('camera');">
+            <button type="button" id="bottomTabCamera" class="bottom-tab flex flex-col items-center -mt-4" data-tab="camera" onclick="handleManualEditorLeave(); setBottomTab('camera');">
                 <div class="w-14 h-14 rounded-full bg-gray-900 flex items-center justify-center shadow-xl active:scale-95 transition">
                     <i class="fa-solid fa-camera text-white text-xl"></i>
                 </div>
@@ -715,6 +783,26 @@
                 <i class="fa-solid fa-user text-lg"></i>
                 <span>我的</span>
             </button>
+        </div>
+
+        <!-- 比赛报告入口：基础版 / Pro 版独立交互 -->
+        <div id="matchReportEntrySheet" class="absolute inset-0 z-50 pointer-events-none">
+            <div id="matchReportEntrySheetBackdrop" onclick="closeMatchReportEntrySheet()" class="absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-200"></div>
+            <div id="matchReportEntrySheetPanel" class="absolute inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl translate-y-full transition-transform duration-250 pb-8">
+                <div class="px-5 pt-4 pb-3 flex items-center justify-between">
+                    <p id="matchReportEntrySheetTitle" class="text-[15px] font-extrabold text-gray-900">比赛报告</p>
+                    <button type="button" onclick="closeMatchReportEntrySheet()" class="w-9 h-9 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center active:scale-95 transition" aria-label="关闭">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="px-5">
+                    <div class="rounded-2xl bg-[#F7F8FC] border border-gray-100 p-4">
+                        <span id="matchReportEntrySheetBadge" class="inline-flex items-center px-2 py-1 rounded-full bg-[#FFF4DE] text-[#9A6200] text-[10px] font-black">基础版</span>
+                        <p id="matchReportEntrySheetDesc" class="mt-3 text-[13px] leading-5 text-gray-600">进入对应的比赛报告入口。</p>
+                    </div>
+                    <button id="matchReportEntrySheetCta" type="button" onclick="closeMatchReportEntrySheet()" class="mt-4 w-full h-11 rounded-[14px] bg-[#0B1745] text-white text-[15px] font-semibold active:scale-95 transition">进入</button>
+                </div>
+            </div>
         </div>
 
         <!-- 工具箱：快捷入口面板（打点剪辑 / 合并并导出） -->
@@ -810,30 +898,30 @@
         <div id="manualEditorModal" class="absolute inset-0 bg-black z-40 flex flex-col transition-transform duration-300 translate-y-full opacity-0 pointer-events-none text-white overflow-hidden">
             <!-- 步骤 1：选择素材 -->
             <div id="manualEditorSelect" class="flex-1 flex flex-col bg-black px-5 pt-11 pb-5">
-                <div class="flex items-center justify-between mb-6">
-                    <button onclick="handleManualEditorLeave(); closeManualEditor()" class="w-11 h-11 rounded-full bg-white/8 text-white flex items-center justify-center active:scale-95 transition">
-                        <i class="fa-solid fa-chevron-left text-[20px]"></i>
+                <div class="flex items-center justify-between mb-5">
+                    <button onclick="handleManualEditorLeave(); closeManualEditor()" class="w-10 h-10 rounded-full bg-white/[0.06] border border-white/[0.05] text-white/92 flex items-center justify-center active:scale-95 transition">
+                        <i class="fa-solid fa-chevron-left text-[17px]"></i>
                     </button>
-                    <h3 class="text-[18px] font-semibold tracking-wide">选择素材</h3>
-                    <div class="w-11"></div>
+                    <h3 class="text-[17px] font-bold tracking-[-0.01em] text-white/96">选择素材</h3>
+                    <div class="w-10"></div>
                 </div>
 
-                <div class="rounded-[20px] bg-[#2d2d2f] p-1 flex mb-5">
-                    <button id="manualAlbumAppBtn" type="button" class="flex-1 h-11 rounded-2xl bg-white text-[#2b2b2b] text-[14px] font-semibold">App 相册</button>
-                    <button id="manualAlbumPhoneBtn" type="button" class="flex-1 h-11 rounded-2xl text-white/78 text-[14px] font-semibold">手机相册</button>
+                <div class="rounded-[14px] bg-white/[0.05] p-[2px] flex mb-3.5 border border-white/[0.05] backdrop-blur-sm">
+                    <button id="manualAlbumAppBtn" type="button" class="flex-1 h-8 rounded-[12px] bg-white text-[#1f1f21] text-[12px] font-bold tracking-[-0.01em]">App 相册</button>
+                    <button id="manualAlbumPhoneBtn" type="button" class="flex-1 h-8 rounded-[12px] text-white/62 text-[12px] font-bold tracking-[-0.01em]">手机相册</button>
                 </div>
 
-                <div class="flex items-center gap-3 mb-5">
-                    <button type="button" class="manual-filter-chip h-11 px-7 rounded-xl bg-[#ff6a00] text-white text-[15px] font-semibold">全部</button>
-                    <button type="button" class="manual-filter-chip h-11 px-7 rounded-xl bg-white/10 text-white/70 text-[15px] font-semibold">视频</button>
-                    <button type="button" class="manual-filter-chip h-11 px-7 rounded-xl bg-white/10 text-white/70 text-[15px] font-semibold">图片</button>
+                <div class="flex items-center gap-2 mb-4">
+                    <button type="button" data-manual-filter="all" class="manual-filter-chip h-7.5 px-3.5 rounded-full bg-white text-[#1f1f21] text-[11px] font-bold tracking-[-0.01em]">全部</button>
+                    <button type="button" data-manual-filter="video" class="manual-filter-chip h-7.5 px-3.5 rounded-full bg-white/[0.06] text-white/58 text-[11px] font-bold tracking-[-0.01em]">视频</button>
+                    <button type="button" data-manual-filter="image" class="manual-filter-chip h-7.5 px-3.5 rounded-full bg-white/[0.06] text-white/58 text-[11px] font-bold tracking-[-0.01em]">图片</button>
                 </div>
 
                 <p class="text-white/60 text-[13px] mb-4">2026-03-24</p>
 
                 <div class="flex-1 overflow-y-auto no-scrollbar">
                     <button id="manualSourceCard" type="button" onclick="toggleManualSourceSelection(); markManualDraftDirty()" class="relative w-[154px] rounded-[10px] overflow-hidden bg-[#111] border border-white/10 active:scale-[0.98] transition block">
-                        <img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面" class="w-full h-[142px] object-cover opacity-90">
+                        <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面" class="w-full h-[142px] object-cover opacity-90">
                         <div id="manualSelectIndicator" class="absolute top-2 right-2 w-7 h-7 rounded-full border-2 border-white/70 bg-black/30 flex items-center justify-center text-transparent text-[12px]">
                             <i class="fa-solid fa-check"></i>
                         </div>
@@ -846,38 +934,38 @@
                         <p id="manualSelectionDuration" class="text-white text-[15px] font-semibold">总时长 00:00:00</p>
                         <p id="manualSelectionHint" class="text-white/60 text-[13px] mt-1">请选择素材</p>
                     </div>
-                    <button id="manualNextBtn" type="button" onclick="enterManualEditorWorkspace()" disabled class="min-w-[108px] h-14 px-6 rounded-full bg-white/30 text-white/85 text-[16px] font-semibold transition disabled:cursor-not-allowed">下一步</button>
+                    <button id="manualNextBtn" type="button" onclick="enterManualEditorWorkspace()" disabled class="min-w-[92px] h-12 px-4 rounded-full bg-white/30 text-white/85 text-[15px] font-semibold transition disabled:cursor-not-allowed">下一步</button>
                 </div>
             </div>
 
             <!-- 步骤 2：剪辑工作台 -->
-            <div id="manualEditorWorkspace" class="hidden flex-1 flex-col bg-black text-white relative">
+            <div id="manualEditorWorkspace" class="hidden flex flex-1 flex-col bg-black text-white relative overflow-hidden">
                 <div class="px-5 pt-11 pb-4 relative">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <button onclick="backToManualSelection()" class="w-11 h-11 rounded-full bg-white/8 text-white flex items-center justify-center active:scale-95 transition" aria-label="返回">
-                                <i class="fa-solid fa-chevron-left text-[20px]"></i>
+                            <button onclick="backToManualSelection()" class="w-10 h-10 rounded-full bg-white/[0.06] border border-white/[0.05] text-white/92 flex items-center justify-center active:scale-95 transition" aria-label="返回">
+                                <i class="fa-solid fa-chevron-left text-[17px]"></i>
                             </button>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button id="manualRatioToggle" type="button" onclick="toggleManualRatioMenu()" class="h-11 min-w-[74px] px-4 rounded-xl bg-white/10 text-white text-[16px] font-semibold flex items-center justify-center gap-2 active:scale-95 transition">
+                            <button id="manualRatioToggle" type="button" onclick="toggleManualRatioMenu()" class="h-9 min-w-[60px] px-3 rounded-[11px] bg-white/[0.08] text-white text-[12px] font-bold flex items-center justify-center gap-1.5 active:scale-95 transition">
                                 <span id="manualRatioLabel">默认</span>
-                                <i id="manualRatioArrow" class="fa-solid fa-chevron-down text-[12px] text-white/80 transition-transform"></i>
+                                <i id="manualRatioArrow" class="fa-solid fa-chevron-down text-[9px] text-white/70 transition-transform"></i>
                             </button>
-                            <button type="button" onclick="openManualExportSheet()" class="h-11 min-w-[72px] px-4 rounded-xl bg-[#ffd400] text-black text-[16px] font-semibold flex items-center justify-center active:scale-95 transition">
+                            <button type="button" onclick="openManualExportSheet()" class="h-8 min-w-[52px] px-2.5 rounded-[10px] bg-[#ff7a00] text-white text-[11px] font-bold flex items-center justify-center active:scale-95 transition">
                                 导出
                             </button>
                         </div>
                     </div>
 
-                    <div id="manualRatioMenu" class="hidden absolute top-[68px] right-[96px] w-[248px] rounded-[18px] bg-[#141414] border border-white/5 px-4 py-4 shadow-2xl z-20">
-                        <div class="flex items-center justify-between gap-2 text-center">
-                            <button type="button" data-manual-ratio-option="默认" onclick="setManualRatio('默认')" class="manual-ratio-option h-8 min-w-[48px] px-2 rounded-md bg-[#ffd400] text-black text-[13px] font-bold active:scale-95 transition">默认</button>
-                            <button type="button" data-manual-ratio-option="16:9" onclick="setManualRatio('16:9')" class="manual-ratio-option h-8 min-w-[48px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">16:9</button>
-                            <button type="button" data-manual-ratio-option="9:16" onclick="setManualRatio('9:16')" class="manual-ratio-option h-8 min-w-[48px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">9:16</button>
-                            <button type="button" data-manual-ratio-option="1:1" onclick="setManualRatio('1:1')" class="manual-ratio-option h-8 min-w-[42px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">1:1</button>
-                            <button type="button" data-manual-ratio-option="3:4" onclick="setManualRatio('3:4')" class="manual-ratio-option h-8 min-w-[42px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">3:4</button>
-                            <button type="button" data-manual-ratio-option="4:3" onclick="setManualRatio('4:3')" class="manual-ratio-option h-8 min-w-[42px] px-2 rounded-md bg-white text-[#111] text-[13px] font-bold active:scale-95 transition">4:3</button>
+                    <div id="manualRatioMenu" class="hidden absolute top-[88px] right-[4px] w-[332px] max-w-[calc(100vw-32px)] rounded-[20px] bg-[#141414] border border-white/5 px-4 py-4 shadow-2xl z-20">
+                        <div class="flex items-center gap-2 text-center">
+                            <button type="button" data-manual-ratio-option="默认" onclick="setManualRatio('默认')" class="manual-ratio-option h-8 w-full rounded-md bg-[#ff7a00] text-black text-[12px] font-bold active:scale-95 transition">默认</button>
+                            <button type="button" data-manual-ratio-option="16:9" onclick="setManualRatio('16:9')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">16:9</button>
+                            <button type="button" data-manual-ratio-option="9:16" onclick="setManualRatio('9:16')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">9:16</button>
+                            <button type="button" data-manual-ratio-option="1:1" onclick="setManualRatio('1:1')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">1:1</button>
+                            <button type="button" data-manual-ratio-option="3:4" onclick="setManualRatio('3:4')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">3:4</button>
+                            <button type="button" data-manual-ratio-option="4:3" onclick="setManualRatio('4:3')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">4:3</button>
                         </div>
                     </div>
                 </div>
@@ -885,32 +973,40 @@
                 <div class="px-4">
                     <div id="manualPreviewStage" class="w-full h-[302px] bg-black rounded-sm flex items-center justify-center overflow-hidden">
                         <div id="manualPreviewFrame" class="manual-preview-frame bg-black overflow-hidden flex items-center justify-center" style="width: 328px; height: 184.5px;">
-                            <img id="manualPreviewBlurBg" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览背景" class="manual-preview-bg">
-                            <img id="manualPreviewImage" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览画面" class="manual-preview-foreground object-cover">
+                            <img id="manualPreviewBlurBg" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览背景" class="manual-preview-bg">
+                            <img id="manualPreviewImage" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览画面" class="manual-preview-foreground object-cover">
                             <div id="manualEditorWatermarkPreview" class="absolute z-[2] text-white font-bold tracking-tight text-[16px] drop-shadow-lg select-none pointer-events-none" style="left:50%;bottom:9%;transform:translateX(-50%);">XbotGo</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between px-5 pt-3 pb-2">
+                <div class="flex items-center justify-between px-5 pt-2.5 pb-2.5">
                     <div class="flex items-center gap-3 text-white">
-                        <i class="fa-solid fa-play text-[28px]"></i>
-                        <span class="text-[18px] font-semibold tracking-wide">00:00/00:20</span>
+                        <button type="button" class="w-9 h-9 rounded-full bg-white/[0.08] text-white/92 flex items-center justify-center active:scale-95 transition" aria-label="播放">
+                            <i class="fa-solid fa-play text-[12px] ml-[1px]"></i>
+                        </button>
+                        <span class="text-[15px] font-semibold tracking-[0.01em] text-white/88">00:00 / 00:20</span>
                     </div>
-                    <div class="flex items-center gap-5 text-white/70 text-[22px]">
-                        <i class="fa-solid fa-rotate-left"></i>
-                        <i class="fa-solid fa-rotate-right"></i>
-                        <i class="fa-regular fa-square"></i>
+                    <div class="flex items-center gap-2">
+                        <button type="button" class="w-8 h-8 rounded-full bg-white/[0.06] text-white/70 flex items-center justify-center active:scale-95 transition" aria-label="撤销">
+                            <i class="fa-solid fa-rotate-left text-[12px]"></i>
+                        </button>
+                        <button type="button" class="w-8 h-8 rounded-full bg-white/[0.06] text-white/70 flex items-center justify-center active:scale-95 transition" aria-label="重做">
+                            <i class="fa-solid fa-rotate-right text-[12px]"></i>
+                        </button>
+                        <button type="button" class="w-8 h-8 rounded-full bg-white/[0.06] text-white/70 flex items-center justify-center active:scale-95 transition" aria-label="全屏">
+                            <i class="fa-solid fa-expand text-[12px]"></i>
+                        </button>
                     </div>
                 </div>
 
-                <div class="mt-2 bg-[#121212] border-t border-white/5 px-4 pt-4 pb-3 flex-1 flex flex-col relative">
+                <div class="mt-2 bg-[#121212] border-t border-white/5 px-4 pt-4 pb-5 flex-1 flex flex-col relative">
                     <div id="manualTimelineGuide" class="absolute inset-0 z-30 hidden">
                         <div class="relative w-full h-full">
-                            <div class="absolute left-1/2 -translate-x-1/2 bottom-[122px] w-[320px] h-[72px] rounded-[12px] border-[3px] border-white"></div>
+                            <div class="absolute left-[92px] top-[52px] w-[218px] h-[78px] border-[3px] border-white"></div>
                             
                             
-<div class="absolute left-1/2 -translate-x-1/2 bottom-[92px] w-[166px] h-[118px]">
+<div class="absolute left-1/2 -translate-x-1/2 top-[92px] w-[166px] h-[118px]">
     <svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full">
       <!-- hand back -->
       <path d="M99 151c-17 0-30-8-40-22L36 96c-5-8-3-17 4-22 7-4 16-3 22 3l14 12V37c0-10 8-18 18-18s18 8 18 18v29c0-7 6-13 14-13s14 6 14 13v11c1-6 6-11 13-11 8 0 14 6 14 14v10c2-5 7-9 13-9 9 0 15 7 15 16v24c0 16-7 29-19 37-9 6-19 9-32 9H99z" fill="#fff"/>
@@ -922,56 +1018,57 @@
     <div class="absolute right-[6px] top-[4px] w-[28px] h-[28px] rounded-full bg-[#37a8ff] opacity-95 animate-pulse"></div>
 </div>
 
-                            <div class="absolute left-1/2 -translate-x-1/2 bottom-[34px] px-6 py-3 rounded-[18px] bg-white text-[#111] text-[14px] font-semibold shadow-xl whitespace-nowrap">双指缩放时间轴</div>
+                            <div class="absolute left-1/2 -translate-x-1/2 bottom-[30px] px-5 py-2.5 rounded-[16px] bg-white text-[#111] text-[13px] font-semibold shadow-xl whitespace-nowrap">双指缩放时间轴</div>
                         </div>
                     </div>
-                    <div class="relative h-[170px]">
+<div class="relative h-[174px] px-3 pt-3">
                         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] h-full bg-white z-20"></div>
-                        <div class="flex items-start gap-4 h-full">
-                            <button id="manualMuteBtn" type="button" onclick="toggleManualMute()" class="w-[74px] pt-[60px] text-center shrink-0 active:scale-95 transition rounded-xl">
-                                <i id="manualMuteIcon" class="fa-solid fa-volume-high text-[24px] text-white/80"></i>
-                                <p id="manualMuteText" class="text-[11px] mt-2 text-white">关闭原声</p>
+                        <div class="flex items-start gap-3 h-full">
+                            <button id="manualMuteBtn" type="button" onclick="toggleManualMute()" class="w-[68px] h-[132px] text-center shrink-0 active:scale-95 transition flex flex-col items-center justify-center">
+                                <i id="manualMuteIcon" class="fa-solid fa-volume-high text-[20px] text-white/78"></i>
+                                <p id="manualMuteText" class="text-[14px] font-medium mt-2.5 text-white/78 leading-none tracking-[0.01em]">关闭原声</p>
                             </button>
                             <div class="flex-1 min-w-0">
-                                <div class="flex items-end justify-between text-white/60 text-[12px] px-1 mb-2">
+                                <div class="flex items-end justify-between text-white/42 text-[11px] px-1.5 mb-2.5">
                                     <span>00:00</span>
                                     <span>•</span>
                                     <span>00:02</span>
                                     <span>•</span>
                                     <span>00:04</span>
                                 </div>
-                                <div class="flex gap-1.5 overflow-hidden">
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden relative"><img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"><span class="absolute inset-0 bg-black/20"></span></div>
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
-                                    <button type="button" class="w-[50px] h-[68px] rounded-md bg-white text-[#333] text-[28px] font-light shrink-0">+</button>
+                                <div class="flex gap-1.5 overflow-hidden py-0.5">
+                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden relative"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"><span class="absolute inset-0 bg-black/20"></span></div>
+                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
+                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
+                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
+                                    <button type="button" class="w-[48px] h-[68px] rounded-[12px] bg-white text-[#333] text-[24px] font-light shrink-0 shadow-sm">+</button>
                                 </div>
-                                <div class="mt-3 h-[52px] rounded-md bg-[#2a2a2a] flex items-center px-4 text-white/85 text-[15px]">
-                                    <i class="fa-solid fa-plus mr-2"></i> 添加音频
+                                <div class="mt-3 h-[50px] rounded-[14px] bg-[#232427] border border-white/6 flex items-center px-4 text-white/78 text-[14px]">
+                                    <i class="fa-solid fa-plus mr-2 text-[13px]"></i> 添加音频
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-auto pt-3 border-t border-white/5">
-                        <div id="manualToolMainBar" class="grid grid-cols-6 gap-0.5 text-center text-white/90">
-                            <button class="py-2 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">编辑</span></button>
-                            <button class="py-2 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-droplet text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">滤镜</span></button>
-                            <button type="button" onclick="openManualSubtool('textSticker')" class="py-2 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-t text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">文字贴纸</span></button>
-                            <button type="button" onclick="openManualSubtool('fx')" class="py-2 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-star text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">特效</span></button>
-                            <button type="button" onclick="openManualSubtool('audio')" class="py-2 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-music text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">音频</span></button>
-                            <button class="py-2 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-clone text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">画中画</span></button>
+
+                    <div class="mt-auto pt-2 pb-0">
+                        <div id="manualToolMainBar" class="grid grid-cols-6 gap-1 text-center text-white/90 px-1.5 pt-1.5 pb-0">
+                            <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">编辑</span></button>
+                            <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-droplet text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">滤镜</span></button>
+                            <button type="button" onclick="openManualSubtool('textSticker')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-t text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">文字贴纸</span></button>
+                            <button type="button" onclick="openManualSubtool('fx')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-star text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">特效</span></button>
+                            <button type="button" onclick="openManualSubtool('audio')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-music text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">音频</span></button>
+                            <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-clone text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">画中画</span></button>
                         </div>
 
-                        <div id="manualSubtoolBar" class="hidden items-end gap-1 px-1 pt-1 text-white">
-                            <button type="button" onclick="closeManualSubtool()" class="w-[42px] h-[52px] rounded-xl bg-white/12 flex items-center justify-center active:scale-95 transition shrink-0 mb-1">
+                        <div id="manualSubtoolBar" class="hidden items-end gap-1 px-1 pt-1 pb-0 text-white">
+                            <button type="button" onclick="closeManualSubtool()" class="w-[42px] h-[52px] text-white/78 flex items-center justify-center active:scale-95 transition shrink-0 mb-1">
                                 <i class="fa-solid fa-chevron-left text-[18px]"></i>
                             </button>
                             <div id="manualTextStickerBar" class="hidden flex-1 grid grid-cols-3 gap-1 text-center">
-                                <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-face-smile text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">贴纸</span></button>
+                                <button type="button" onclick="openManualStickerLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-face-smile text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">贴纸</span></button>
                                 <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-square-plus text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">新建字幕</span></button>
-                                <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">字幕模板</span></button>
+                                <button type="button" onclick="openManualSubtitleTemplateLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">字幕模板</span></button>
                             </div>
                             <div id="manualAudioBar" class="hidden flex-1 grid grid-cols-4 gap-1 text-center">
                                 <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-music text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">音乐</span></button>
@@ -979,11 +1076,12 @@
                                 <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-wave-square text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">提取</span></button>
                                 <button type="button" onclick="openManualSoundFxPanel()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-bell text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">音效</span></button>
                             </div>
-                            <div id="manualFxBar" class="hidden flex-1 grid grid-cols-1 text-center px-14">
-                                <button type="button" onclick="openManualFxLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-star text-[24px] block mb-1.5"></i><span class="text-[11px] leading-none whitespace-nowrap">特效</span></button>
+                            <div id="manualFxBar" class="hidden flex-1 flex justify-center text-center">
+                                <button type="button" onclick="openManualFxLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-star text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">特效</span></button>
                             </div>
                         </div>
                     </div>
+
 
                     <div id="manualSoundFxPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#15151b] rounded-t-[26px] border-t border-white/5 px-4 pt-4 pb-6 shadow-2xl">
                         <div class="flex items-center gap-3 mb-4">
@@ -1012,29 +1110,66 @@
                         </div>
                     </div>
 
-                    <div id="manualFxLibraryPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#232327] rounded-t-[26px] border-t border-white/5 px-4 pt-4 pb-6 shadow-2xl max-h-[48%]">
-                        <div class="flex items-center justify-between mb-4 px-1">
+                    <div id="manualStickerLibraryPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#232327] rounded-t-[26px] border-t border-white/5 px-4 pt-2 pb-5 shadow-2xl max-h-[70%]">
+                        <div class="flex items-center justify-between mb-2 px-1">
+                            <div class="w-8"></div>
+                            <h3 class="text-[16px] font-semibold text-white">添加贴纸</h3>
+                            <button type="button" onclick="closeManualStickerLibrary()" class="w-8 h-8 rounded-full flex items-center justify-center text-white/80 active:scale-95 transition"><i class="fa-solid fa-chevron-down text-[18px]"></i></button>
+                        </div>
+                        <div class="mb-2 px-1">
+                            <div class="h-10 rounded-[14px] bg-white/8 border border-white/6 flex items-center px-3 gap-2 text-white/70">
+                                <i class="fa-solid fa-magnifying-glass text-[13px]"></i>
+                                <input id="manualStickerSearchInput" type="text" placeholder="搜索贴纸" oninput="filterManualStickerItems()" class="flex-1 bg-transparent outline-none text-[14px] placeholder:text-white/35 text-white" />
+                            </div>
+                        </div>
+                        <div id="manualStickerCategoryBar" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar mb-3 whitespace-nowrap pr-6 cursor-grab active:cursor-grabbing" style="-webkit-overflow-scrolling: touch; touch-action: pan-x;">
+                            <button type="button" onclick="setManualStickerCategory('effect')" data-sticker-cat="effect" class="px-3 h-9 rounded-lg bg-[#ff7a00]/18 text-[#ff9a42] text-[14px] font-semibold shrink-0">效果类</button>
+                            <button type="button" onclick="setManualStickerCategory('tactic')" data-sticker-cat="tactic" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">战术标记类</button>
+                            <button type="button" onclick="setManualStickerCategory('data')" data-sticker-cat="data" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">数据可视化类</button>
+                            <button type="button" onclick="setManualStickerCategory('other')" data-sticker-cat="other" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">其他</button>
+                        </div>
+                        <div id="manualStickerGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 420px;"></div>
+                    </div>
+
+
+                    <div id="manualSubtitleTemplatePanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#232327] rounded-t-[26px] border-t border-white/5 px-4 pt-2 pb-5 shadow-2xl max-h-[70%]">
+                        <div class="flex items-center justify-between mb-2 px-1">
+                            <div class="w-8"></div>
+                            <h3 class="text-[16px] font-semibold text-white">添加字幕模板</h3>
+                            <button type="button" onclick="closeManualSubtitleTemplateLibrary()" class="w-8 h-8 rounded-full flex items-center justify-center text-white/80 active:scale-95 transition"><i class="fa-solid fa-chevron-down text-[18px]"></i></button>
+                        </div>
+                        <div id="manualSubtitleCategoryBar" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar mb-3 whitespace-nowrap pr-6 cursor-grab active:cursor-grabbing" style="-webkit-overflow-scrolling: touch; touch-action: pan-x;">
+                            <button type="button" onclick="setManualSubtitleCategory('score_highlight')" data-subtitle-cat="score_highlight" class="px-3 h-9 rounded-lg bg-[#ff7a00]/18 text-[#ff9a42] text-[14px] font-semibold shrink-0">得分与高光</button>
+                            <button type="button" onclick="setManualSubtitleCategory('defense')" data-subtitle-cat="defense" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">防守与对抗</button>
+                            <button type="button" onclick="setManualSubtitleCategory('funny')" data-subtitle-cat="funny" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">搞笑与综艺</button>
+                            <button type="button" onclick="setManualSubtitleCategory('broadcast')" data-subtitle-cat="broadcast" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">赛事与转播</button>
+                        </div>
+                        <div id="manualSubtitleGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 420px;"></div>
+                    </div>
+
+                    <div id="manualFxLibraryPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#232327] rounded-t-[26px] border-t border-white/5 px-4 pt-2 pb-5 shadow-2xl max-h-[60%]">
+                        <div class="flex items-center justify-between mb-2 px-1">
                             <div class="w-8"></div>
                             <h3 class="text-[16px] font-semibold text-white">添加特效</h3>
                             <button type="button" onclick="closeManualFxLibrary()" class="w-8 h-8 rounded-full flex items-center justify-center text-white/80 active:scale-95 transition"><i class="fa-solid fa-chevron-down text-[18px]"></i></button>
                         </div>
-                        <div id="manualFxCategoryBar" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar mb-5 whitespace-nowrap pr-6 cursor-grab active:cursor-grabbing" style="-webkit-overflow-scrolling: touch; touch-action: pan-x;">
-                            <button type="button" onclick="setManualFxCategory('goal')" data-fx-cat="goal" class="px-3 h-9 rounded-lg bg-[#ffde38]/20 text-[#ffde38] text-[14px] font-semibold shrink-0">进球高燃</button>
-                            <button type="button" onclick="setManualFxCategory('clutch')" data-fx-cat="clutch" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">绝杀瞬间</button>
-                            <button type="button" onclick="setManualFxCategory('speed')" data-fx-cat="speed" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">速度冲刺</button>
-                            <button type="button" onclick="setManualFxCategory('crowd')" data-fx-cat="crowd" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">观众欢呼</button>
-                            <button type="button" onclick="setManualFxCategory('training')" data-fx-cat="training" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">训练氛围</button>
-                            <button type="button" onclick="setManualFxCategory('victory')" data-fx-cat="victory" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">胜利定格</button>
+                        <div id="manualFxCategoryBar" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar mb-3 whitespace-nowrap pr-6 cursor-grab active:cursor-grabbing" style="-webkit-overflow-scrolling: touch; touch-action: pan-x;">
+                            <button type="button" onclick="setManualFxCategory('football')" data-fx-cat="football" class="px-3 h-9 rounded-lg bg-[#ff7a00]/18 text-[#ff9a42] text-[14px] font-semibold shrink-0">足球</button>
+                            <button type="button" onclick="setManualFxCategory('basketball')" data-fx-cat="basketball" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">篮球</button>
+                            <button type="button" onclick="setManualFxCategory('hockey')" data-fx-cat="hockey" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">冰球</button>
+                            <button type="button" onclick="setManualFxCategory('volleyball')" data-fx-cat="volleyball" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">排球</button>
+                            <button type="button" onclick="setManualFxCategory('rugby')" data-fx-cat="rugby" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">橄榄球</button>
+                            <button type="button" onclick="setManualFxCategory('other')" data-fx-cat="other" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">其他</button>
                         </div>
-                        <div id="manualFxGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 250px;">
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-blue-200 to-slate-600 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>火焰进球</p></div>
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-slate-400 to-slate-900 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>冲刺残影</p></div>
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-500 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>聚光打板</p></div>
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-cyan-200 to-sky-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>赛场闪白</p></div>
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-yellow-100 to-orange-400 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>欢呼粒子</p></div>
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-purple-300 to-indigo-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>球星光环</p></div>
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-green-100 to-emerald-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>训练节奏</p></div>
-                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-amber-300 to-red-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>逆光绝杀</p></div>
+                        <div id="manualFxGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 360px;">
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-blue-200 to-slate-600 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>火焰进球</p></div>
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-slate-400 to-slate-900 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>冲刺残影</p></div>
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-500 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>聚光打板</p></div>
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-cyan-200 to-sky-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>赛场闪白</p></div>
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-400 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>欢呼粒子</p></div>
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-purple-300 to-indigo-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>球星光环</p></div>
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-green-100 to-emerald-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>训练节奏</p></div>
+                            <div class="space-y-2"><div class="h-24 rounded-2xl bg-gradient-to-br from-amber-300 to-red-700 relative overflow-hidden"><span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div><p>逆光绝杀</p></div>
                         </div>
                     </div>
 
@@ -1044,12 +1179,12 @@
                         <div class="flex items-center justify-between mb-7">
                             <p class="text-[14px] font-semibold">保存设置</p>
                             <button type="button" onclick="openManualExportDetail()" class="flex items-center gap-2 text-[14px] text-[#8f8f95] active:scale-95 transition">
-                                <span class="px-1.5 py-0.5 rounded bg-[#ffe44d] text-black text-[11px] font-semibold">默认</span>
+                                <span class="px-1.5 py-0.5 rounded bg-[#ff7a00] text-white text-[11px] font-semibold">默认</span>
                                 <span>1080P/30FPS</span>
                                 <i class="fa-solid fa-chevron-right text-[13px]"></i>
                             </button>
                         </div>
-                        <button type="button" onclick="startManualSaveExport()" class="w-full h-14 rounded-[16px] bg-[#ffd400] text-black text-[17px] font-semibold active:scale-[0.99] transition">保存到本地</button>
+                        <button type="button" onclick="startManualSaveExport()" class="w-full h-12 rounded-[14px] bg-[#ff7a00] text-white text-[15px] font-semibold active:scale-[0.99] transition">保存到本地</button>
                     </div>
 
                     <div id="manualExportDetailSheet" class="hidden absolute left-0 right-0 bottom-0 z-50 bg-[#f6f6f7] text-black rounded-t-[28px] px-5 pt-5 pb-6 shadow-2xl max-h-[88%] overflow-y-auto no-scrollbar">
@@ -1064,15 +1199,15 @@
                                 <p class="text-[14px] font-semibold">平台推荐参数</p>
                                 <button type="button" id="manualExportPresetModeBtn" onclick="setManualExportMode('preset')" class="text-[13px] text-[#8f8f95] flex items-center gap-2 active:scale-95 transition">
                                     <span id="manualExportPresetLabel">1080P/30FPS</span>
-                                    <span id="manualExportPresetIndicator" class="w-5 h-5 rounded-full border-2 border-[#ffd400] inline-flex items-center justify-center"><span class="w-2.5 h-2.5 rounded-full bg-[#ffd400]"></span></span>
+                                    <span id="manualExportPresetIndicator" class="w-5 h-5 rounded-full border-2 border-[#ff7a00] inline-flex items-center justify-center"><span class="w-2.5 h-2.5 rounded-full bg-[#ff7a00]"></span></span>
                                 </button>
                             </div>
 
                             <div id="manualExportPresetList" class="flex items-center gap-3 overflow-x-auto no-scrollbar whitespace-nowrap">
-                                <button type="button" onclick="setManualExportPreset('默认')" data-export-preset="默认" class="manual-export-preset h-12 px-5 rounded-full bg-[#ffd400] text-black text-[14px] font-semibold shrink-0 flex items-center justify-center gap-2"><i class="fa-regular fa-image text-[16px]"></i><span>默认</span></button>
-                                <button type="button" onclick="setManualExportPreset('抖音')" data-export-preset="抖音" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">抖音</button>
-                                <button type="button" onclick="setManualExportPreset('小红书')" data-export-preset="小红书" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">小红书</button>
-                                <button type="button" onclick="setManualExportPreset('微信')" data-export-preset="微信" class="manual-export-preset h-12 px-5 rounded-full bg-white text-[#222] text-[14px] font-semibold shrink-0">微信</button>
+                                <button type="button" onclick="setManualExportPreset('默认')" data-export-preset="默认" class="manual-export-preset h-12 px-5 rounded-full border border-[#ff7a00] bg-white text-black text-[14px] font-semibold shrink-0 flex items-center justify-center gap-2"><i class="fa-regular fa-image text-[16px]"></i><span>默认</span></button>
+                                <button type="button" onclick="setManualExportPreset('抖音')" data-export-preset="抖音" class="manual-export-preset h-12 px-5 rounded-full border border-[#ececf0] bg-white text-[#222] text-[14px] font-semibold shrink-0">抖音</button>
+                                <button type="button" onclick="setManualExportPreset('小红书')" data-export-preset="小红书" class="manual-export-preset h-12 px-5 rounded-full border border-[#ececf0] bg-white text-[#222] text-[14px] font-semibold shrink-0">小红书</button>
+                                <button type="button" onclick="setManualExportPreset('微信')" data-export-preset="微信" class="manual-export-preset h-12 px-5 rounded-full border border-[#ececf0] bg-white text-[#222] text-[14px] font-semibold shrink-0">微信</button>
                             </div>
                         </div>
 
@@ -1090,28 +1225,28 @@
                             <div class="mb-5">
                                 <p class="text-[14px] font-semibold mb-3">分辨率</p>
                                 <div class="flex gap-2 flex-wrap">
-                                    <button type="button" onclick="setManualCustomOption('resolution','720P')" data-custom-group="resolution" data-custom-value="720P" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">720P</button>
-                                    <button type="button" onclick="setManualCustomOption('resolution','1080P')" data-custom-group="resolution" data-custom-value="1080P" class="manual-custom-chip h-10 px-4 rounded-full bg-[#fff2a8] text-black text-[13px] font-semibold border border-[#ffd400]">1080P</button>
-                                    <button type="button" onclick="setManualCustomOption('resolution','1440P')" data-custom-group="resolution" data-custom-value="1440P" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">1440P</button>
-                                    <button type="button" onclick="setManualCustomOption('resolution','4K')" data-custom-group="resolution" data-custom-value="4K" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">4K</button>
+                                    <button type="button" onclick="setManualCustomOption('resolution','720P')" data-custom-group="resolution" data-custom-value="720P" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-medium border border-[#ececf0]">720P</button>
+                                    <button type="button" onclick="setManualCustomOption('resolution','1080P')" data-custom-group="resolution" data-custom-value="1080P" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-semibold border border-[#ff7a00]">1080P</button>
+                                    <button type="button" onclick="setManualCustomOption('resolution','1440P')" data-custom-group="resolution" data-custom-value="1440P" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-medium border border-[#ececf0]">1440P</button>
+                                    <button type="button" onclick="setManualCustomOption('resolution','4K')" data-custom-group="resolution" data-custom-value="4K" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-medium border border-[#ececf0]">4K</button>
                                 </div>
                             </div>
 
                             <div class="mb-5">
                                 <p class="text-[14px] font-semibold mb-3">帧率</p>
                                 <div class="flex gap-2 flex-wrap">
-                                    <button type="button" onclick="setManualCustomOption('fps','25FPS')" data-custom-group="fps" data-custom-value="25FPS" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">25FPS</button>
-                                    <button type="button" onclick="setManualCustomOption('fps','30FPS')" data-custom-group="fps" data-custom-value="30FPS" class="manual-custom-chip h-10 px-4 rounded-full bg-[#fff2a8] text-black text-[13px] font-semibold border border-[#ffd400]">30FPS</button>
+                                    <button type="button" onclick="setManualCustomOption('fps','25FPS')" data-custom-group="fps" data-custom-value="25FPS" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-medium border border-[#ececf0]">25FPS</button>
+                                    <button type="button" onclick="setManualCustomOption('fps','30FPS')" data-custom-group="fps" data-custom-value="30FPS" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-semibold border border-[#ff7a00]">30FPS</button>
                                 </div>
                             </div>
 
                             <div class="mb-6">
                                 <p class="text-[14px] font-semibold mb-3">码率 (Mbps)</p>
                                 <div class="flex gap-2 flex-wrap">
-                                    <button type="button" onclick="setManualCustomOption('bitrate','5')" data-custom-group="bitrate" data-custom-value="5" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">5</button>
-                                    <button type="button" onclick="setManualCustomOption('bitrate','10')" data-custom-group="bitrate" data-custom-value="10" class="manual-custom-chip h-10 px-4 rounded-full bg-[#fff2a8] text-black text-[13px] font-semibold border border-[#ffd400]">10</button>
-                                    <button type="button" onclick="setManualCustomOption('bitrate','15')" data-custom-group="bitrate" data-custom-value="15" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">15</button>
-                                    <button type="button" onclick="setManualCustomOption('bitrate','25')" data-custom-group="bitrate" data-custom-value="25" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-[#666] text-[13px] font-medium border border-[#ececf0]">25</button>
+                                    <button type="button" onclick="setManualCustomOption('bitrate','5')" data-custom-group="bitrate" data-custom-value="5" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-medium border border-[#ececf0]">5</button>
+                                    <button type="button" onclick="setManualCustomOption('bitrate','10')" data-custom-group="bitrate" data-custom-value="10" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-semibold border border-[#ff7a00]">10</button>
+                                    <button type="button" onclick="setManualCustomOption('bitrate','15')" data-custom-group="bitrate" data-custom-value="15" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-medium border border-[#ececf0]">15</button>
+                                    <button type="button" onclick="setManualCustomOption('bitrate','25')" data-custom-group="bitrate" data-custom-value="25" class="manual-custom-chip h-10 px-4 rounded-full bg-white text-black text-[13px] font-medium border border-[#ececf0]">25</button>
                                 </div>
                             </div>
 
@@ -1122,7 +1257,7 @@
                             <button type="button" onclick="openManualWatermarkSheet()" id="manualWatermarkEntryBtn" class="flex items-center gap-2 text-[14px] text-[#8f8f95] active:scale-95 transition"><span id="manualWatermarkStatusText">已开启</span><i class="fa-solid fa-chevron-right text-[13px]"></i></button>
                         </div>
 
-                        <button type="button" onclick="startManualSaveExport()" class="w-full h-14 rounded-[16px] bg-[#ffd400] text-black text-[17px] font-semibold active:scale-[0.99] transition">保存到本地</button>
+                        <button type="button" onclick="startManualSaveExport()" class="w-full h-12 rounded-[14px] bg-[#ff7a00] text-white text-[15px] font-semibold active:scale-[0.99] transition">保存到本地</button>
                     </div>
 
                     <div id="manualWatermarkSheet" class="hidden absolute left-0 right-0 bottom-0 z-[60] bg-[#232327] text-white rounded-t-[28px] px-5 pt-5 pb-6 shadow-2xl">
@@ -1132,12 +1267,12 @@
                             <button type="button" onclick="closeManualWatermarkSheet()" class="w-8 h-8 rounded-full flex items-center justify-center text-white/80 active:scale-95 transition"><i class="fa-solid fa-xmark text-[20px]"></i></button>
                         </div>
                         <div class="relative mb-6 rounded-[8px] overflow-hidden bg-[#303035] aspect-[1.15/1] border border-white/5">
-                            <img id="manualWatermarkPreviewImage" src="https://images.unsplash.com/photo-1510771463146-e89e6e86560e?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" class="w-full h-full object-cover" alt="preview">
+                            <img id="manualWatermarkPreviewImage" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" class="w-full h-full object-cover" alt="preview">
                             <div id="manualWatermarkPreview" class="absolute text-white font-bold tracking-tight text-[18px] drop-shadow-lg select-none" style="left:50%;bottom:9%;transform:translateX(-50%);">XbotGo</div>
                         </div>
                         <div class="flex items-center justify-between py-4 mb-3">
                             <p class="text-[14px] font-semibold">水印设置</p>
-                            <button type="button" id="manualWatermarkToggle" onclick="toggleManualWatermark()" class="relative w-[54px] h-[32px] rounded-full bg-[#ffd400] transition active:scale-95">
+                            <button type="button" id="manualWatermarkToggle" onclick="toggleManualWatermark()" class="relative w-[54px] h-[32px] rounded-full bg-[#ff7a00] transition active:scale-95">
                                 <span id="manualWatermarkKnob" class="absolute top-1 right-1 w-6 h-6 rounded-full bg-white shadow"></span>
                             </button>
                         </div>
@@ -1145,13 +1280,13 @@
                             <div>
                                 <p class="text-[14px] font-semibold mb-3">样式</p>
                                 <div class="grid grid-cols-1 gap-4">
-                                    <button type="button" data-watermark-style="xbotgo" class="manual-watermark-style h-20 rounded-[14px] bg-white/12 text-white text-[16px] font-semibold border-2 border-[#ffd400]">XbotGo</button>
+                                    <button type="button" data-watermark-style="xbotgo" class="manual-watermark-style h-20 rounded-[14px] bg-white/12 text-white text-[16px] font-semibold border-2 border-[#ff7a00]">XbotGo</button>
                                 </div>
                             </div>
                             <div>
                                 <p class="text-[14px] font-semibold mb-3">位置</p>
                                 <div class="grid grid-cols-5 gap-3">
-                                    <button type="button" onclick="setManualWatermarkPosition('bottom-center')" data-watermark-pos="bottom-center" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white text-[15px] font-semibold border-2 border-[#ffd400]">底中</button>
+                                    <button type="button" onclick="setManualWatermarkPosition('bottom-center')" data-watermark-pos="bottom-center" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white text-[15px] font-semibold border-2 border-[#ff7a00]">底中</button>
                                     <button type="button" onclick="setManualWatermarkPosition('top-left')" data-watermark-pos="top-left" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white/70 text-[15px] font-semibold border border-transparent">左上</button>
                                     <button type="button" onclick="setManualWatermarkPosition('top-right')" data-watermark-pos="top-right" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white/70 text-[15px] font-semibold border border-transparent">右上</button>
                                     <button type="button" onclick="setManualWatermarkPosition('bottom-left')" data-watermark-pos="bottom-left" class="manual-watermark-pos h-14 rounded-[14px] bg-white/12 text-white/70 text-[15px] font-semibold border border-transparent">左下</button>
@@ -1705,7 +1840,7 @@
                 if (donePage) workspace.appendChild(donePage);
             }
         })();
-    </script>
+</script>
                             </div>
                         </div>
 
@@ -1730,7 +1865,7 @@
                                         </div>
                                         `);
                                     }
-                                </script>
+</script>
                             </div>
                         </div>
                     </div>
@@ -2383,6 +2518,119 @@
             setBottomTab('create');
             if (floatingFaqEntry) floatingFaqEntry.classList.remove('hidden');
             updateFloatingFaqVisibility();
+        }
+
+        function openMatchReportVersion(version) {
+            const title = document.getElementById('matchReportEntrySheetTitle');
+            const desc = document.getElementById('matchReportEntrySheetDesc');
+            const badge = document.getElementById('matchReportEntrySheetBadge');
+            const cta = document.getElementById('matchReportEntrySheetCta');
+            const sheet = document.getElementById('matchReportEntrySheet');
+            const backdrop = document.getElementById('matchReportEntrySheetBackdrop');
+            const panel = document.getElementById('matchReportEntrySheetPanel');
+            if (!sheet || !backdrop || !panel || !title || !desc || !badge || !cta) return;
+
+            if (version === 'pro') {
+                title.textContent = '比赛报告 · Pro 完整版';
+                desc.textContent = '进入完整版报告入口，查看深度数据、图表对比与更完整的赛后分析内容。';
+                badge.textContent = 'PRO';
+                badge.className = 'inline-flex items-center px-2 py-1 rounded-full border border-[#C9A74D] bg-[#1A255F] text-[#F4D06F] text-[10px] font-black';
+                cta.textContent = '进入 Pro 版';
+            } else {
+                title.textContent = '比赛报告 · 基础版';
+                desc.textContent = '进入基础版报告入口，快速查看模板成片、简要引导与基础信息汇总。';
+                badge.textContent = '基础版';
+                badge.className = 'inline-flex items-center px-2 py-1 rounded-full bg-[#FFF4DE] text-[#9A6200] text-[10px] font-black';
+                cta.textContent = '进入基础版';
+            }
+
+            sheet.classList.remove('pointer-events-none');
+            backdrop.classList.remove('opacity-0');
+            panel.classList.remove('translate-y-full');
+        }
+
+        function closeMatchReportEntrySheet() {
+            const sheet = document.getElementById('matchReportEntrySheet');
+            const backdrop = document.getElementById('matchReportEntrySheetBackdrop');
+            const panel = document.getElementById('matchReportEntrySheetPanel');
+            if (!sheet || !backdrop || !panel) return;
+            backdrop.classList.add('opacity-0');
+            panel.classList.add('translate-y-full');
+            setTimeout(() => sheet.classList.add('pointer-events-none'), 220);
+        }
+
+        let currentHomeFeaturePage = 0;
+        let homeFeatureDragState = null;
+
+        function updateHomeFeatureDots() {
+            const dot0 = document.getElementById('homeFeatureDot0');
+            const dot1 = document.getElementById('homeFeatureDot1');
+            if (!dot0 || !dot1) return;
+            if (currentHomeFeaturePage <= 0) {
+                dot0.className = 'w-4 h-1.5 rounded-full bg-gray-900 transition-all';
+                dot1.className = 'w-1.5 h-1.5 rounded-full bg-gray-300 transition-all';
+            } else {
+                dot0.className = 'w-1.5 h-1.5 rounded-full bg-gray-300 transition-all';
+                dot1.className = 'w-4 h-1.5 rounded-full bg-gray-900 transition-all';
+            }
+        }
+
+        function setHomeFeaturePage(pageIndex) {
+            const carousel = document.getElementById('homeFeatureCarousel');
+            if (!carousel) return;
+            currentHomeFeaturePage = pageIndex <= 0 ? 0 : 1;
+            carousel.style.transition = 'transform 300ms ease-out';
+            carousel.style.transform = currentHomeFeaturePage === 0 ? 'translateX(0%)' : 'translateX(-50%)';
+            updateHomeFeatureDots();
+        }
+
+        function initHomeFeatureCarousel() {
+            const wrap = document.getElementById('homeFeatureCarouselWrap');
+            const carousel = document.getElementById('homeFeatureCarousel');
+            if (!wrap || !carousel || wrap.dataset.inited === '1') {
+                updateHomeFeatureDots();
+                return;
+            }
+            wrap.dataset.inited = '1';
+
+            const getClientX = (event) => {
+                if (event.touches && event.touches[0]) return event.touches[0].clientX;
+                if (event.changedTouches && event.changedTouches[0]) return event.changedTouches[0].clientX;
+                return event.clientX;
+            };
+
+            const onStart = (event) => {
+                homeFeatureDragState = { startX: getClientX(event), moved: false };
+                carousel.style.transition = 'none';
+            };
+
+            const onMove = (event) => {
+                if (!homeFeatureDragState) return;
+                const deltaX = getClientX(event) - homeFeatureDragState.startX;
+                if (Math.abs(deltaX) > 6) homeFeatureDragState.moved = true;
+            };
+
+            const onEnd = (event) => {
+                if (!homeFeatureDragState) return;
+                const deltaX = getClientX(event) - homeFeatureDragState.startX;
+                if (deltaX <= -40) {
+                    setHomeFeaturePage(1);
+                } else if (deltaX >= 40) {
+                    setHomeFeaturePage(0);
+                } else {
+                    setHomeFeaturePage(currentHomeFeaturePage);
+                }
+                homeFeatureDragState = null;
+            };
+
+            wrap.addEventListener('touchstart', onStart, { passive: true });
+            wrap.addEventListener('touchmove', onMove, { passive: true });
+            wrap.addEventListener('touchend', onEnd, { passive: true });
+            wrap.addEventListener('mousedown', onStart);
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+
+            setHomeFeaturePage(0);
         }
 
         /* --- 首页 Tab 与查看全部交互 --- */
@@ -3121,18 +3369,18 @@
             if (duration) duration.innerText = '总时长 00:00:00';
             if (nextBtn) {
                 nextBtn.disabled = true;
-                nextBtn.classList.remove('bg-[#ff6a00]');
+                nextBtn.classList.remove('bg-[#ff7a00]');
                 nextBtn.classList.add('bg-white/30');
             }
             if (indicator) {
-                indicator.classList.remove('bg-[#ff6a00]', 'border-[#ff6a00]', 'text-white');
+                indicator.classList.remove('bg-[#ff7a00]', 'border-[#ff7a00]', 'text-white');
                 indicator.classList.add('border-white/70', 'text-transparent');
                 const muteBtn = document.getElementById('manualMuteBtn');
             const muteIcon = document.getElementById('manualMuteIcon');
             const muteText = document.getElementById('manualMuteText');
             if (muteBtn) muteBtn.classList.remove('bg-white/10', 'ring-1', 'ring-white/10');
             if (muteIcon) muteIcon.className = 'fa-solid fa-volume-high text-[24px] text-white/80';
-            if (muteText) { muteText.innerText = '关闭原声'; muteText.classList.remove('text-[#ffd400]'); muteText.classList.add('text-white'); }
+            if (muteText) { muteText.innerText = '关闭原声'; muteText.classList.remove('text-[#ff7a00]'); muteText.classList.add('text-white'); }
             hideManualTimelineGuide();
             closeManualSubtool();
         }
@@ -3141,7 +3389,7 @@
             const muteText = document.getElementById('manualMuteText');
             if (muteBtn) muteBtn.classList.remove('bg-white/10', 'ring-1', 'ring-white/10');
             if (muteIcon) muteIcon.className = 'fa-solid fa-volume-high text-[24px] text-white/80';
-            if (muteText) { muteText.innerText = '关闭原声'; muteText.classList.remove('text-[#ffd400]'); muteText.classList.add('text-white'); }
+            if (muteText) { muteText.innerText = '关闭原声'; muteText.classList.remove('text-[#ff7a00]'); muteText.classList.add('text-white'); }
             hideManualTimelineGuide();
             closeManualExportSheet();
         }
@@ -3173,16 +3421,54 @@
             if (duration) duration.innerText = manualSourceSelected ? '总时长 00:00:19' : '总时长 00:00:00';
             if (nextBtn) {
                 nextBtn.disabled = !manualSourceSelected;
-                nextBtn.classList.toggle('bg-[#ff6a00]', manualSourceSelected);
+                nextBtn.classList.toggle('bg-[#ff7a00]', manualSourceSelected);
                 nextBtn.classList.toggle('bg-white/30', !manualSourceSelected);
             }
             if (indicator) {
-                indicator.classList.toggle('bg-[#ff6a00]', manualSourceSelected);
-                indicator.classList.toggle('border-[#ff6a00]', manualSourceSelected);
+                indicator.classList.toggle('bg-[#ff7a00]', manualSourceSelected);
+                indicator.classList.toggle('border-[#ff7a00]', manualSourceSelected);
                 indicator.classList.toggle('text-white', manualSourceSelected);
                 indicator.classList.toggle('border-white/70', !manualSourceSelected);
                 indicator.classList.toggle('text-transparent', !manualSourceSelected);
             }
+        }
+
+        function setManualAlbumTab(tab) {
+            const appBtn = document.getElementById('manualAlbumAppBtn');
+            const phoneBtn = document.getElementById('manualAlbumPhoneBtn');
+            if (!appBtn || !phoneBtn) return;
+            const isApp = tab === 'app';
+            appBtn.className = `flex-1 h-8 rounded-[12px] text-[12px] font-bold tracking-[-0.01em] transition ${isApp ? 'bg-white text-[#1f1f21]' : 'bg-transparent text-white/62'}`;
+            phoneBtn.className = `flex-1 h-8 rounded-[12px] text-[12px] font-bold tracking-[-0.01em] transition ${isApp ? 'bg-transparent text-white/62' : 'bg-white text-[#1f1f21]'}`;
+        }
+
+        function setManualFilterChip(filter) {
+            const chips = document.querySelectorAll('.manual-filter-chip');
+            chips.forEach((chip) => {
+                const active = chip.dataset.manualFilter === filter;
+                chip.classList.toggle('bg-white', active);
+                chip.classList.toggle('text-[#1f1f21]', active);
+                chip.classList.toggle('bg-white/[0.06]', !active);
+                chip.classList.toggle('text-white/58', !active);
+            });
+        }
+
+        function bindManualSelectionInteractions() {
+            const appBtn = document.getElementById('manualAlbumAppBtn');
+            const phoneBtn = document.getElementById('manualAlbumPhoneBtn');
+            if (appBtn && !appBtn.dataset.bound) {
+                appBtn.addEventListener('click', () => setManualAlbumTab('app'));
+                appBtn.dataset.bound = 'true';
+            }
+            if (phoneBtn && !phoneBtn.dataset.bound) {
+                phoneBtn.addEventListener('click', () => setManualAlbumTab('phone'));
+                phoneBtn.dataset.bound = 'true';
+            }
+            document.querySelectorAll('.manual-filter-chip').forEach((chip) => {
+                if (chip.dataset.bound) return;
+                chip.addEventListener('click', () => setManualFilterChip(chip.dataset.manualFilter));
+                chip.dataset.bound = 'true';
+            });
         }
 
         function enterManualEditorWorkspace() {
@@ -3280,11 +3566,11 @@
                 btn.classList.toggle('ring-white/10', manualMuted);
             }
             if (icon) {
-                icon.className = manualMuted ? 'fa-solid fa-volume-xmark text-[24px] text-[#ffd400]' : 'fa-solid fa-volume-high text-[24px] text-white/80';
+                icon.className = manualMuted ? 'fa-solid fa-volume-xmark text-[24px] text-[#ff7a00]' : 'fa-solid fa-volume-high text-[24px] text-white/80';
             }
             if (text) {
                 text.innerText = manualMuted ? '已关原声' : '关闭原声';
-                text.classList.toggle('text-[#ffd400]', manualMuted);
+                text.classList.toggle('text-[#ff7a00]', manualMuted);
                 text.classList.toggle('text-white', !manualMuted);
             }
         }
@@ -3298,14 +3584,14 @@
             if (!stage || !frame) return;
 
             const ratioMap = {
-                '默认': 9 / 16,
+                '默认': 16 / 9,
                 '16:9': 16 / 9,
                 '9:16': 9 / 16,
                 '1:1': 1,
                 '3:4': 3 / 4,
                 '4:3': 4 / 3,
             };
-            const originalRatio = 9 / 16;
+            const originalRatio = 16 / 9;
             const target = ratioMap[ratio] || originalRatio;
             const stageRect = stage.getBoundingClientRect();
             const maxW = stageRect.width;
@@ -3322,8 +3608,11 @@
             frame.style.height = `${height}px`;
 
             const isMismatch = Math.abs(target - originalRatio) > 0.01;
-            if (fg) fg.classList.toggle('object-contain', isMismatch);
-            if (fg) fg.classList.toggle('object-cover', !isMismatch);
+            if (fg) {
+                fg.classList.toggle('object-contain', isMismatch);
+                fg.classList.toggle('object-cover', !isMismatch);
+                fg.style.objectPosition = ratio === '9:16' ? '62% center' : 'center';
+            }
             if (bg) {
                 bg.classList.toggle('is-visible', isMismatch);
                 bg.style.display = isMismatch ? 'block' : 'none';
@@ -3335,7 +3624,7 @@
             if (label) label.innerText = ratio;
             document.querySelectorAll('.manual-ratio-option').forEach((btn) => {
                 const active = btn.getAttribute('data-manual-ratio-option') === ratio;
-                btn.classList.toggle('bg-[#ffd400]', active);
+                btn.classList.toggle('bg-[#ff7a00]', active);
                 btn.classList.toggle('text-black', active);
                 btn.classList.toggle('bg-white', !active);
                 btn.classList.toggle('text-[#111]', !active);
@@ -3366,6 +3655,8 @@
             if (!mainBar || !subBar || !textBar || !audioBar || !fxBar) return;
             closeManualSoundFxPanel();
             closeManualFxLibrary();
+            closeManualStickerLibrary();
+            closeManualSubtitleTemplateLibrary();
             mainBar.classList.add('hidden');
             subBar.classList.remove('hidden');
             subBar.classList.add('flex');
@@ -3400,6 +3691,8 @@
             if (fxBar) { fxBar.classList.add('hidden'); fxBar.classList.remove('grid'); }
             closeManualSoundFxPanel();
             closeManualFxLibrary();
+            closeManualStickerLibrary();
+            closeManualSubtitleTemplateLibrary();
         }
 
         function openManualSoundFxPanel() {
@@ -3462,11 +3755,112 @@
                 </div>`).join('');
         }
 
+        function setManualStickerCategory(cat) {
+            const tabs = document.querySelectorAll('[data-sticker-cat]');
+            tabs.forEach(tab => {
+                const active = tab.getAttribute('data-sticker-cat') === cat;
+                tab.className = `px-3 h-9 rounded-lg text-[14px] font-semibold shrink-0 ${active ? 'bg-[#ff7a00]/18 text-[#ff9a42]' : 'bg-white/8 text-white/55'}`;
+            });
+            const bar = document.getElementById('manualStickerCategoryBar');
+            const activeTab = document.querySelector(`[data-sticker-cat="${cat}"]`);
+            if (bar && activeTab) {
+                activeTab.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
+            }
+            const grid = document.getElementById('manualStickerGrid');
+            if (!grid) return;
+            const stickerMap = {
+                effect: [
+                    ['from-orange-100 to-orange-500','速度线'],
+                    ['from-sky-100 to-blue-700','聚焦框'],
+                    ['from-pink-100 to-rose-600','闪光星'],
+                    ['from-cyan-100 to-teal-700','拖影光带'],
+                    ['from-lime-100 to-green-700','欢呼气泡'],
+                    ['from-violet-100 to-purple-700','高光爆点'],
+                    ['from-amber-100 to-red-600','火焰边框'],
+                    ['from-zinc-100 to-zinc-700','电影留白']
+                ],
+                tactic: [
+                    ['from-emerald-100 to-green-700','跑位箭头'],
+                    ['from-red-100 to-rose-700','重点圈选'],
+                    ['from-sky-100 to-blue-700','传球路线'],
+                    ['from-orange-100 to-orange-500','区域框'],
+                    ['from-purple-100 to-violet-700','夹击标识'],
+                    ['from-cyan-100 to-cyan-700','路径虚线'],
+                    ['from-lime-100 to-emerald-700','战术板'],
+                    ['from-stone-100 to-stone-700','暂停讲解']
+                ],
+                data: [
+                    ['from-orange-100 to-red-700','比分卡'],
+                    ['from-sky-100 to-indigo-700','球员数据'],
+                    ['from-cyan-100 to-blue-700','速度仪表'],
+                    ['from-lime-100 to-green-700','命中热区'],
+                    ['from-amber-100 to-orange-600','时间轴标记'],
+                    ['from-violet-100 to-purple-700','统计浮层'],
+                    ['from-rose-100 to-pink-700','胜率图表'],
+                    ['from-zinc-100 to-zinc-800','回合标签']
+                ],
+                other: [
+                    ['from-slate-100 to-slate-700','通用标签'],
+                    ['from-cyan-100 to-sky-700','封面角标'],
+                    ['from-orange-100 to-orange-500','手写便签'],
+                    ['from-pink-100 to-fuchsia-700','情绪贴纸'],
+                    ['from-lime-100 to-emerald-700','训练记录'],
+                    ['from-indigo-100 to-indigo-700','赛事信息'],
+                    ['from-orange-100 to-red-700','精彩提示'],
+                    ['from-zinc-100 to-zinc-800','极简文字']
+                ]
+            };
+            const items = stickerMap[cat] || stickerMap.effect;
+            grid.innerHTML = items.map(([grad, label], idx) => `
+                <button type="button" class="manual-sticker-item active:scale-95 transition" data-sticker-label="${label}" onclick="setManualStickerCardActive(this)">
+                    <div class="h-24 rounded-2xl bg-white/[0.03] relative overflow-hidden border border-white/10 flex items-center justify-center">
+                        <div class="w-[62px] h-[62px] rounded-[18px] border border-dashed border-white/22 bg-white/[0.02]"></div>
+                        <span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span>
+                    </div>
+                </button>
+            `).join('');
+            filterManualStickerItems();
+        }
+
+        function filterManualStickerItems() {
+            const input = document.getElementById('manualStickerSearchInput');
+            const keyword = (input?.value || '').trim().toLowerCase();
+            document.querySelectorAll('#manualStickerGrid .manual-sticker-item').forEach(item => {
+                const label = (item.getAttribute('data-sticker-label') || '').toLowerCase();
+                item.style.display = !keyword || label.includes(keyword) ? '' : 'none';
+            });
+        }
+
+        function setManualStickerCardActive(el) {
+            document.querySelectorAll('#manualStickerGrid > button > div').forEach(card => {
+                card.classList.remove('border-[#ff7a00]');
+                card.classList.add('border-transparent');
+            });
+            const card = el.querySelector('div');
+            if (card) {
+                card.classList.remove('border-transparent');
+                card.classList.add('border-[#ff7a00]');
+            }
+        }
+
+        function openManualStickerLibrary() {
+            const panel = document.getElementById('manualStickerLibraryPanel');
+            if (panel) panel.classList.remove('hidden');
+            const input = document.getElementById('manualStickerSearchInput');
+            if (input) input.value = '';
+            setManualStickerCategory('effect');
+        }
+
+        function closeManualStickerLibrary() {
+            const panel = document.getElementById('manualStickerLibraryPanel');
+            if (panel) panel.classList.add('hidden');
+        }
+
         function setManualFxCategory(cat) {
             const tabs = document.querySelectorAll('[data-fx-cat]');
             tabs.forEach(tab => {
                 const active = tab.getAttribute('data-fx-cat') === cat;
-                tab.className = `px-3 h-9 rounded-lg text-[14px] font-semibold shrink-0 ${active ? 'bg-[#ffde38]/20 text-[#ffde38]' : 'bg-white/8 text-white/55'}`;
+                tab.className = `px-3 h-9 rounded-lg text-[14px] font-semibold shrink-0 ${active ? 'bg-[#ff7a00]/18 text-[#ff9a42]' : 'bg-white/8 text-white/55'}`;
             });
             const bar = document.getElementById('manualFxCategoryBar');
             const activeTab = document.querySelector(`[data-fx-cat="${cat}"]`);
@@ -3476,72 +3870,72 @@
             const grid = document.getElementById('manualFxGrid');
             if (!grid) return;
             const fxMap = {
-                goal: [
-                    ['from-blue-200 to-slate-600','火焰进球'],
-                    ['from-slate-400 to-slate-900','冲刺残影'],
-                    ['from-zinc-900 to-zinc-500','聚光打板'],
-                    ['from-cyan-200 to-sky-700','赛场闪白'],
-                    ['from-yellow-100 to-orange-400','燃爆入网'],
-                    ['from-purple-300 to-indigo-700','巨星时刻'],
-                    ['from-green-100 to-emerald-700','比分炸场'],
-                    ['from-amber-300 to-red-700','逆转终结']
+                football: [
+                    ['from-emerald-100 to-green-700','进球火焰'],
+                    ['from-sky-100 to-blue-700','射门残影'],
+                    ['from-lime-100 to-emerald-600','草坪光带'],
+                    ['from-orange-100 to-orange-400','破门闪白'],
+                    ['from-slate-200 to-slate-800','看台聚焦'],
+                    ['from-cyan-100 to-teal-700','门前慢放'],
+                    ['from-orange-100 to-red-600','绝杀时刻'],
+                    ['from-indigo-100 to-indigo-700','比分上屏']
                 ],
-                clutch: [
-                    ['from-zinc-800 to-stone-500','终场定帧'],
-                    ['from-indigo-400 to-violet-800','绝杀霓虹'],
-                    ['from-amber-200 to-rose-700','聚焦主角'],
-                    ['from-slate-600 to-black','胜负慢放'],
-                    ['from-red-200 to-red-700','红线压哨'],
-                    ['from-sky-200 to-sky-800','时间冻结'],
-                    ['from-lime-100 to-emerald-600','掌声聚焦'],
-                    ['from-orange-200 to-amber-700','冠军封面']
+                basketball: [
+                    ['from-orange-100 to-red-700','灌篮火焰'],
+                    ['from-amber-100 to-orange-500','投篮弧光'],
+                    ['from-sky-100 to-blue-700','三分追踪'],
+                    ['from-violet-100 to-purple-700','球星聚光'],
+                    ['from-zinc-200 to-zinc-800','慢放回拉'],
+                    ['from-orange-100 to-orange-500','篮筐震动'],
+                    ['from-rose-100 to-rose-700','绝杀封面'],
+                    ['from-cyan-100 to-cyan-700','运球残影']
                 ],
-                speed: [
-                    ['from-sky-100 to-blue-700','速度线'],
-                    ['from-cyan-200 to-indigo-800','电光残影'],
-                    ['from-slate-200 to-slate-700','镜头拉扯'],
-                    ['from-emerald-100 to-teal-700','爆发加速'],
-                    ['from-violet-200 to-fuchsia-700','高速穿梭'],
-                    ['from-orange-100 to-red-600','冲线火花'],
-                    ['from-yellow-100 to-amber-500','急停变向'],
-                    ['from-gray-100 to-zinc-800','凌厉切入']
+                hockey: [
+                    ['from-cyan-100 to-sky-700','冰面流光'],
+                    ['from-blue-100 to-indigo-800','击球拖影'],
+                    ['from-slate-100 to-slate-700','冰刀火花'],
+                    ['from-white to-cyan-500','寒光闪切'],
+                    ['from-zinc-100 to-zinc-800','对抗冻结'],
+                    ['from-emerald-100 to-teal-600','门前聚焦'],
+                    ['from-purple-100 to-violet-700','极地氛围'],
+                    ['from-amber-100 to-orange-600','进球爆闪']
                 ],
-                crowd: [
-                    ['from-pink-100 to-rose-600','欢呼粒子'],
-                    ['from-blue-100 to-cyan-700','看台闪光'],
-                    ['from-purple-100 to-purple-700','全场喝彩'],
-                    ['from-yellow-100 to-orange-500','呐喊波纹'],
-                    ['from-red-100 to-red-700','掌声爆点'],
-                    ['from-indigo-100 to-blue-700','庆祝灯牌'],
-                    ['from-emerald-100 to-green-700','主场助威'],
-                    ['from-stone-100 to-zinc-700','情绪升温']
+                volleyball: [
+                    ['from-orange-100 to-orange-500','扣杀震场'],
+                    ['from-sky-100 to-blue-700','发球轨迹'],
+                    ['from-pink-100 to-rose-600','拦网冲击'],
+                    ['from-cyan-100 to-teal-700','排球弧线'],
+                    ['from-lime-100 to-green-700','赛点聚焦'],
+                    ['from-violet-100 to-purple-700','庆祝粒子'],
+                    ['from-slate-100 to-slate-700','全场慢放'],
+                    ['from-red-100 to-red-700','绝地反击']
                 ],
-                training: [
-                    ['from-green-100 to-emerald-700','训练节奏'],
-                    ['from-sky-100 to-blue-700','动作标记'],
-                    ['from-lime-100 to-lime-700','步伐跟随'],
-                    ['from-yellow-100 to-amber-600','节拍辅助'],
-                    ['from-zinc-200 to-zinc-800','重复回看'],
-                    ['from-violet-100 to-violet-700','力量轨迹'],
-                    ['from-cyan-100 to-teal-700','稳定练习'],
-                    ['from-orange-100 to-orange-700','热身氛围']
+                rugby: [
+                    ['from-stone-100 to-stone-700','冲撞爆点'],
+                    ['from-green-100 to-emerald-700','草地冲锋'],
+                    ['from-orange-100 to-red-700','达阵火焰'],
+                    ['from-zinc-200 to-zinc-900','力量定格'],
+                    ['from-orange-100 to-orange-500','看台欢呼'],
+                    ['from-sky-100 to-blue-700','推进残影'],
+                    ['from-lime-100 to-green-600','团队高光'],
+                    ['from-purple-100 to-violet-700','决胜封面']
                 ],
-                victory: [
-                    ['from-yellow-100 to-yellow-500','胜利定格'],
-                    ['from-fuchsia-100 to-pink-700','MVP高光'],
-                    ['from-amber-100 to-red-700','彩带喷发'],
-                    ['from-blue-100 to-indigo-700','封王时刻'],
-                    ['from-lime-100 to-green-700','庆祝合影'],
-                    ['from-violet-100 to-purple-700','闪耀奖杯'],
-                    ['from-slate-100 to-slate-700','战报封面'],
-                    ['from-rose-100 to-rose-700','荣耀上屏']
+                other: [
+                    ['from-slate-100 to-slate-700','通用闪白'],
+                    ['from-cyan-100 to-blue-700','速度残影'],
+                    ['from-purple-100 to-fuchsia-700','霓虹高光'],
+                    ['from-amber-100 to-orange-600','聚焦主角'],
+                    ['from-lime-100 to-emerald-700','节奏粒子'],
+                    ['from-rose-100 to-red-700','高潮定格'],
+                    ['from-zinc-100 to-zinc-800','电影慢放'],
+                    ['from-indigo-100 to-indigo-700','封面上屏']
                 ]
             };
-            const items = fxMap[cat] || fxMap.goal;
+            const items = fxMap[cat] || fxMap.football;
             grid.innerHTML = items.map(([grad, label]) => `
                 <button type="button" class="space-y-2 text-left active:scale-95 transition" onclick="setManualFxCardActive(this)">
                     <div class="h-24 rounded-2xl bg-gradient-to-br ${grad} relative overflow-hidden border border-transparent">
-                        <span class="absolute top-0 right-0 bg-[#ffde38] text-black text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span>
+                        <span class="absolute top-0 right-0 bg-[#ff7a00] text-white text-[12px] w-6 h-6 rounded-bl-xl flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span>
                     </div>
                     <p class="text-center">${label}</p>
                 </button>
@@ -3550,20 +3944,20 @@
 
         function setManualFxCardActive(el) {
             document.querySelectorAll('#manualFxGrid > button > div').forEach(card => {
-                card.classList.remove('border-[#ffde38]');
+                card.classList.remove('border-[#ff7a00]');
                 card.classList.add('border-transparent');
             });
             const card = el.querySelector('div');
             if (card) {
                 card.classList.remove('border-transparent');
-                card.classList.add('border-[#ffde38]');
+                card.classList.add('border-[#ff7a00]');
             }
         }
 
         function openManualFxLibrary() {
             const panel = document.getElementById('manualFxLibraryPanel');
             if (panel) panel.classList.remove('hidden');
-            setManualFxCategory('goal');
+            setManualFxCategory('football');
         }
 
         function closeManualFxLibrary() {
@@ -3572,6 +3966,63 @@
         }
 
 
+
+
+        function setManualSubtitleCategory(cat) {
+            const tabs = document.querySelectorAll('[data-subtitle-cat]');
+            tabs.forEach(tab => {
+                const active = tab.getAttribute('data-subtitle-cat') === cat;
+                tab.className = `px-3 h-9 rounded-lg text-[14px] font-semibold shrink-0 ${active ? 'bg-[#ff7a00]/18 text-[#ff9a42]' : 'bg-white/8 text-white/55'}`;
+            });
+            const bar = document.getElementById('manualSubtitleCategoryBar');
+            const activeTab = document.querySelector(`[data-subtitle-cat="${cat}"]`);
+            if (bar && activeTab) {
+                activeTab.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
+            }
+            const grid = document.getElementById('manualSubtitleGrid');
+            if (!grid) return;
+            const itemMap = {
+                score_highlight: ['得分上屏','压哨绝杀','高光回放','MVP时刻','进球播报','关键一击','胜负反转','高能集锦'],
+                defense: ['封盖时刻','硬核对抗','拦截回放','防守高压','抢断播报','篮板对抗','压迫防线','禁区肉搏'],
+                funny: ['整活字幕','搞笑吐槽','反转时刻','迷惑操作','综艺贴条','全场爆笑','气氛拉满','离谱瞬间'],
+                broadcast: ['比分播报','赛事信息','选手下三分之一','赛况更新','直播条幅','转播字幕','战术说明','数据快讯']
+            };
+            const items = itemMap[cat] || itemMap.score_highlight;
+            grid.innerHTML = items.map(label => `
+                <button type="button" class="manual-subtitle-item active:scale-95 transition" onclick="setManualSubtitleCardActive(this)">
+                    <div class="h-24 rounded-2xl bg-white/[0.03] relative overflow-hidden border border-white/10 px-2.5 py-3 flex flex-col items-center justify-center gap-3">
+                        <div class="space-y-2 opacity-90 w-full">
+                            <div class="h-2.5 w-4/5 rounded-full bg-white/18 mx-auto"></div>
+                            <div class="h-2.5 w-3/5 rounded-full bg-white/12 mx-auto"></div>
+                        </div>
+                        <div class="h-7 w-[78%] rounded-lg border border-dashed border-white/18 bg-white/[0.02]"></div>
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        function setManualSubtitleCardActive(el) {
+            document.querySelectorAll('#manualSubtitleGrid > button > div').forEach(card => {
+                card.classList.remove('border-[#ff7a00]');
+                card.classList.add('border-white/10');
+            });
+            const card = el.querySelector('div');
+            if (card) {
+                card.classList.remove('border-white/10');
+                card.classList.add('border-[#ff7a00]');
+            }
+        }
+
+        function openManualSubtitleTemplateLibrary() {
+            const panel = document.getElementById('manualSubtitleTemplatePanel');
+            if (panel) panel.classList.remove('hidden');
+            setManualSubtitleCategory('score_highlight');
+        }
+
+        function closeManualSubtitleTemplateLibrary() {
+            const panel = document.getElementById('manualSubtitleTemplatePanel');
+            if (panel) panel.classList.add('hidden');
+        }
 
         function openManualExportSheet() {
             closeManualRatioMenu();
@@ -3639,11 +4090,11 @@
                 presetList.classList.toggle('opacity-55', !presetActive);
             }
             if (presetIndicator) {
-                presetIndicator.classList.toggle('border-[#ffd400]', presetActive);
+                presetIndicator.classList.toggle('border-[#ff7a00]', presetActive);
                 presetIndicator.classList.toggle('border-[#dedee3]', !presetActive);
                 const inner = presetIndicator.querySelector('span');
                 if (inner) {
-                    inner.classList.toggle('bg-[#ffd400]', presetActive);
+                    inner.classList.toggle('bg-[#ff7a00]', presetActive);
                     inner.classList.toggle('bg-transparent', !presetActive);
                 }
             }
@@ -3657,13 +4108,13 @@
             }
             if (customToggle) {
                 customToggle.classList.toggle('border-[#dedee3]', presetActive);
-                customToggle.classList.toggle('border-[#ffd400]', !presetActive);
+                customToggle.classList.toggle('border-[#ff7a00]', !presetActive);
                 customToggle.classList.toggle('bg-white', presetActive);
                 customToggle.classList.toggle('bg-[#fff7b3]', !presetActive);
             }
             if (customDot) {
                 customDot.classList.toggle('bg-transparent', presetActive);
-                customDot.classList.toggle('bg-[#ffd400]', !presetActive);
+                customDot.classList.toggle('bg-[#ff7a00]', !presetActive);
             }
             if (watermarkBlock) {
                 watermarkBlock.classList.remove('opacity-40','pointer-events-none');
@@ -3681,11 +4132,10 @@
             if (label) label.innerText = '1080P/30FPS';
             document.querySelectorAll('.manual-export-preset').forEach(btn => {
                 const active = btn.getAttribute('data-export-preset') === name;
-                btn.classList.toggle('bg-[#ffd400]', active);
+                btn.classList.toggle('bg-white', true);
                 btn.classList.toggle('text-black', active);
-                btn.classList.toggle('border-[#ffd400]', active);
-                btn.classList.toggle('bg-white', !active);
-                btn.classList.toggle('text-[#222]', !active);
+                btn.classList.toggle('text-black', !active);
+                btn.classList.toggle('border-[#ff7a00]', active);
                 btn.classList.toggle('border-[#ececf0]', !active);
             });
             setManualExportMode('preset');
@@ -3696,13 +4146,13 @@
             manualCustomSelections[group] = value;
             document.querySelectorAll(`[data-custom-group="${group}"]`).forEach(btn => {
                 const active = btn.getAttribute('data-custom-value') === value;
-                btn.classList.toggle('bg-[#fff2a8]', active);
-                btn.classList.toggle('border-[#ffd400]', active);
+                btn.classList.toggle('bg-white', true);
+                btn.classList.toggle('border-[#ff7a00]', active);
                 btn.classList.toggle('text-black', active);
                 btn.classList.toggle('font-semibold', active);
                 btn.classList.toggle('bg-white', !active);
                 btn.classList.toggle('border-[#ececf0]', !active);
-                btn.classList.toggle('text-[#666]', !active);
+                btn.classList.toggle('text-black', !active);
                 btn.classList.toggle('font-medium', !active);
             });
         }
@@ -3797,7 +4247,7 @@
                 Object.entries(cfg).forEach(([k,v]) => node.style[k] = v);
             });
             if (toggle) {
-                toggle.classList.toggle('bg-[#ffd400]', manualWatermarkEnabled);
+                toggle.classList.toggle('bg-[#ff7a00]', manualWatermarkEnabled);
                 toggle.classList.toggle('bg-white/20', !manualWatermarkEnabled);
             }
             if (knob) {
@@ -3812,14 +4262,14 @@
             document.querySelectorAll('.manual-watermark-style').forEach(btn => {
                 const active = btn.getAttribute('data-watermark-style') === manualWatermarkStyle;
                 btn.classList.toggle('border-2', active);
-                btn.classList.toggle('border-[#ffd400]', active);
+                btn.classList.toggle('border-[#ff7a00]', active);
                 btn.classList.toggle('text-white', active);
                 btn.classList.toggle('text-white/70', !active);
             });
             document.querySelectorAll('.manual-watermark-pos').forEach(btn => {
                 const active = btn.getAttribute('data-watermark-pos') === manualWatermarkPosition;
                 btn.classList.toggle('border-2', active);
-                btn.classList.toggle('border-[#ffd400]', active);
+                btn.classList.toggle('border-[#ff7a00]', active);
                 btn.classList.toggle('text-white', active);
                 btn.classList.toggle('text-white/70', !active);
             });
@@ -3854,7 +4304,7 @@
             if (desc) desc.innerHTML = '将 App 切换到后台将暂停保存，在不重启 App 的情况下切换回前台可继续保存。<br>温馨提示：导出后的视频不支持 AI 分析。';
             if (share) { share.classList.add('hidden'); share.style.display = 'none'; }
             let progress = 28;
-            if (ring) ring.style.background = `conic-gradient(#ffd400 ${progress}%, rgba(255,255,255,0.14) 0)`;
+            if (ring) ring.style.background = `conic-gradient(#ff7a00 ${progress}%, rgba(255,255,255,0.14) 0)`;
             if (progressText) progressText.innerText = progress + '%';
             if (manualExportProgressTimer) clearInterval(manualExportProgressTimer);
             manualExportProgressTimer = setInterval(() => {
@@ -3863,12 +4313,12 @@
                     progress = 100;
                     clearInterval(manualExportProgressTimer);
                     manualExportProgressTimer = null;
-                    if (ring) ring.style.background = 'conic-gradient(#ffd400 100%, rgba(255,255,255,0.14) 0)';
+                    if (ring) ring.style.background = 'conic-gradient(#ff7a00 100%, rgba(255,255,255,0.14) 0)';
                     if (progressText) progressText.innerText = '100%';
                     setTimeout(showManualSaveDonePage, 350);
                     return;
                 }
-                if (ring) ring.style.background = `conic-gradient(#ffd400 ${progress}%, rgba(255,255,255,0.14) 0)`;
+                if (ring) ring.style.background = `conic-gradient(#ff7a00 ${progress}%, rgba(255,255,255,0.14) 0)`;
                 if (progressText) progressText.innerText = progress + '%';
             }, 420);
         }
@@ -3888,7 +4338,7 @@
             if (title) title.innerText = '已完成';
             if (desc) desc.innerHTML = '视频已保存到本地相册。<br>导出后的视频不支持 AI 分析。';
             if (share) { share.classList.remove('hidden'); share.style.display = 'block'; }
-            if (ring) ring.style.background = 'conic-gradient(#ffd400 100%, rgba(255,255,255,0.14) 0)';
+            if (ring) ring.style.background = 'conic-gradient(#ff7a00 100%, rgba(255,255,255,0.14) 0)';
         }
 
         function closeManualSaveFlow() {
@@ -4115,5 +4565,24 @@ document.addEventListener('click', function(e){
 });
 </script>
 
+<script>
+(function(){
+  function initManualSelectionUI(){
+    if (window.bindManualSelectionInteractions) bindManualSelectionInteractions();
+    if (window.setManualAlbumTab) setManualAlbumTab('app');
+    if (window.setManualFilterChip) setManualFilterChip('all');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initManualSelectionUI);
+  } else {
+    initManualSelectionUI();
+  }
+})();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initHomeFeatureCarousel();
+            updateHomeFeatureDots();
+        });
+</script>
 </body>
 </html>
