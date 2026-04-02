@@ -258,13 +258,13 @@
 
             <div class="px-5">
                 <section class="mt-4 transition-all duration-300" id="draftsSection">
-                    <div class="flex items-end justify-between border-b border-gray-200 pb-2 mb-4 bg-gray-50 sticky top-0 z-10 pt-2" id="draftsTabContainer">
-                        <div class="flex space-x-6 items-end">
+                    <div class="flex items-center justify-between border-b border-gray-200 pb-2 mb-4 bg-gray-50 sticky top-0 z-10 pt-2" id="draftsTabContainer">
+                        <div class="flex space-x-6 items-center">
                             <button id="draftsBackButton" onclick="handleManualEditorLeave(); restoreStudioHome()" class="hidden text-gray-600 pb-0.5 active:opacity-50 transition -mr-2"><i class="fa-solid fa-chevron-left text-sm"></i></button>
                             <button class="text-[#FF5028] font-bold text-sm border-b-2 border-[#FF5028] pb-2 -mb-[10px] transition-colors" id="mainTabTemplate" onclick="switchMainTab('template')">模板</button>
                         </div>
                         <!-- 新增：首页草稿箱的查看全部按钮 -->
-                        <button onclick="openTemplatesAllPage()" id="draftsViewAllBtn" class="text-[13px] text-gray-500 active:text-gray-800 transition flex items-center mb-1">
+                        <button onclick="openTemplatesAllPage()" id="draftsViewAllBtn" class="text-[13px] text-gray-500 active:text-gray-800 transition flex items-center">
                             查看全部 <i class="fa-solid fa-angle-right ml-1"></i>
                         </button>
                     </div>
@@ -289,7 +289,7 @@
                             <div data-template-category-panel="goal" class="template-category-panel">
                                 <div class="flex items-center justify-between mb-2">
                                     <h3 class="text-sm font-bold text-gray-700">进球集锦类</h3>
-                                    <button type="button" onclick="openTemplatesAllPage('goal')" class="text-[12px] text-gray-400 flex items-center active:text-gray-700 transition">
+                                    <button type="button" class="text-[12px] text-gray-400 flex items-center active:text-gray-700 transition">
                                         more <i class="fa-solid fa-angle-right ml-1"></i>
                                     </button>
                                 </div>
@@ -322,7 +322,7 @@
                             <div data-template-category-panel="moment" class="template-category-panel hidden">
                                 <div class="flex items-center justify-between mb-2">
                                     <h3 class="text-sm font-bold text-gray-700">高光瞬间</h3>
-                                    <button type="button" onclick="openTemplatesAllPage('moment')" class="text-[12px] text-gray-400 flex items-center active:text-gray-700 transition">
+                                    <button type="button" class="text-[12px] text-gray-400 flex items-center active:text-gray-700 transition">
                                         more <i class="fa-solid fa-angle-right ml-1"></i>
                                     </button>
                                 </div>
@@ -355,7 +355,7 @@
                             <div data-template-category-panel="star" class="template-category-panel hidden">
                                 <div class="flex items-center justify-between mb-2">
                                     <h3 class="text-sm font-bold text-gray-700">球星名场面复刻</h3>
-                                    <button type="button" onclick="openTemplatesAllPage('star')" class="text-[12px] text-gray-400 flex items-center active:text-gray-700 transition">
+                                    <button type="button" class="text-[12px] text-gray-400 flex items-center active:text-gray-700 transition">
                                         more <i class="fa-solid fa-angle-right ml-1"></i>
                                     </button>
                                 </div>
@@ -729,6 +729,7 @@
                                 <div class="rounded-[22px] overflow-hidden border border-white/15 bg-white/5">
                                     <div class="relative aspect-[1.72/1] bg-black">
                                         <img id="manualExportProgressImage" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" class="w-full h-full object-cover opacity-80" alt="export progress">
+                                        <div id="manualExportWatermarkPreview" class="absolute z-[2] text-white font-bold tracking-tight text-[18px] drop-shadow-lg select-none pointer-events-none" style="left:50%;bottom:9%;transform:translateX(-50%);">XbotGo</div>
                                         <div class="absolute inset-0 bg-black/25"></div>
                                         <div id="manualExportProgressText" class="absolute inset-0 flex items-center justify-center text-white text-[56px] font-extrabold tracking-tight">28%</div>
                                     </div>
@@ -920,21 +921,56 @@
                 <p class="text-white/60 text-[13px] mb-4">2026-03-24</p>
 
                 <div class="flex-1 overflow-y-auto no-scrollbar">
-                    <button id="manualSourceCard" type="button" onclick="toggleManualSourceSelection(); markManualDraftDirty()" class="relative w-[154px] rounded-[10px] overflow-hidden bg-[#111] border border-white/10 active:scale-[0.98] transition block">
-                        <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面" class="w-full h-[142px] object-cover opacity-90">
-                        <div id="manualSelectIndicator" class="absolute top-2 right-2 w-7 h-7 rounded-full border-2 border-white/70 bg-black/30 flex items-center justify-center text-transparent text-[12px]">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <span class="absolute bottom-2 right-2 text-white text-[10px] font-medium">00:19</span>
-                    </button>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button id="manualSourceCard1" data-manual-source-id="1" data-duration="19" type="button" onclick="toggleManualSourceSelection(1); markManualDraftDirty()" class="relative rounded-[10px] overflow-hidden bg-[#111] border border-white/10 active:scale-[0.98] transition block">
+                            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面1" class="w-full h-[142px] object-cover opacity-90">
+                            <div id="manualSelectIndicator1" class="absolute top-2 right-2 min-w-[28px] h-7 px-1.5 rounded-full border-2 border-white/70 bg-black/30 flex items-center justify-center text-transparent text-[11px] font-bold">
+                                <span>1</span>
+                            </div>
+                            <span class="absolute left-2 top-2 px-1.5 py-0.5 rounded bg-black/45 text-white text-[9px] font-semibold">视频</span>
+                            <span class="absolute bottom-2 right-2 text-white text-[10px] font-medium">00:19</span>
+                        </button>
+                        <button id="manualSourceCard2" data-manual-source-id="2" data-duration="24" type="button" onclick="toggleManualSourceSelection(2); markManualDraftDirty()" class="relative rounded-[10px] overflow-hidden bg-[#111] border border-white/10 active:scale-[0.98] transition block">
+                            <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面2" class="w-full h-[142px] object-cover opacity-90">
+                            <div id="manualSelectIndicator2" class="absolute top-2 right-2 min-w-[28px] h-7 px-1.5 rounded-full border-2 border-white/70 bg-black/30 flex items-center justify-center text-transparent text-[11px] font-bold">
+                                <span>2</span>
+                            </div>
+                            <span class="absolute left-2 top-2 px-1.5 py-0.5 rounded bg-black/45 text-white text-[9px] font-semibold">视频</span>
+                            <span class="absolute bottom-2 right-2 text-white text-[10px] font-medium">00:24</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="pt-5 flex items-end justify-between gap-4">
+                <div id="manualSelectionDefaultFooter" class="pt-5 flex items-end justify-between gap-4">
                     <div>
                         <p id="manualSelectionDuration" class="text-white text-[15px] font-semibold">总时长 00:00:00</p>
                         <p id="manualSelectionHint" class="text-white/60 text-[13px] mt-1">请选择素材</p>
                     </div>
-                    <button id="manualNextBtn" type="button" onclick="enterManualEditorWorkspace()" disabled class="min-w-[92px] h-12 px-4 rounded-full bg-white/30 text-white/85 text-[15px] font-semibold transition disabled:cursor-not-allowed">下一步</button>
+                    <button id="manualNextBtn" type="button" onclick="handleManualSelectionNext()" disabled class="min-w-[92px] h-12 px-4 rounded-full bg-white/30 text-white/85 text-[15px] font-semibold transition disabled:cursor-not-allowed">下一步</button>
+                </div>
+
+                <div id="manualMergeExportFooter" class="hidden pt-4 -mx-5 px-0 pb-0">
+                    <div class="bg-black w-full px-5 pt-3.5 pb-4 border-t border-white/[0.06]">
+                        <div id="manualMergeThumbList" class="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1 mb-3">
+                            <div id="manualMergeSelectedThumb1" class="hidden shrink-0 w-[76px] h-[44px] rounded-[10px] overflow-hidden border border-white/10 bg-[#111] relative">
+                                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="已选素材1" class="w-full h-full object-cover opacity-90">
+                                <span class="absolute left-1.5 top-1 w-4 h-4 rounded-full bg-[#ff7a00] text-white text-[9px] font-bold flex items-center justify-center">1</span>
+                                <span class="absolute left-1.5 bottom-1 text-white text-[9px] font-medium">00:19</span>
+                            </div>
+                            <div id="manualMergeSelectedThumb2" class="hidden shrink-0 w-[76px] h-[44px] rounded-[10px] overflow-hidden border border-white/10 bg-[#111] relative">
+                                <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="已选素材2" class="w-full h-full object-cover opacity-90">
+                                <span class="absolute left-1.5 top-1 w-4 h-4 rounded-full bg-[#ff7a00] text-white text-[9px] font-bold flex items-center justify-center">2</span>
+                                <span class="absolute left-1.5 bottom-1 text-white text-[9px] font-medium">00:24</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <p id="manualMergeSelectionSummary" class="text-white text-[13px] font-semibold">请选择至少 2 段视频</p>
+                                <p id="manualMergeSelectionDuration" class="text-white/55 text-[11px] mt-1">总时长 00:00:00</p>
+                            </div>
+                            <button id="manualMergeNextBtn" type="button" onclick="handleManualMergeExportNext()" disabled class="shrink-0 min-w-[94px] h-9 px-4 rounded-full bg-white/18 text-white/70 text-[13px] font-semibold transition disabled:cursor-not-allowed">下一步</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -959,13 +995,13 @@
                     </div>
 
                     <div id="manualRatioMenu" class="hidden absolute top-[88px] right-[4px] w-[332px] max-w-[calc(100vw-32px)] rounded-[20px] bg-[#141414] border border-white/5 px-4 py-4 shadow-2xl z-20">
-                        <div class="flex items-center gap-2 text-center">
-                            <button type="button" data-manual-ratio-option="默认" onclick="setManualRatio('默认')" class="manual-ratio-option h-8 w-full rounded-md bg-[#ff7a00] text-black text-[12px] font-bold active:scale-95 transition">默认</button>
-                            <button type="button" data-manual-ratio-option="16:9" onclick="setManualRatio('16:9')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">16:9</button>
-                            <button type="button" data-manual-ratio-option="9:16" onclick="setManualRatio('9:16')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">9:16</button>
-                            <button type="button" data-manual-ratio-option="1:1" onclick="setManualRatio('1:1')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">1:1</button>
-                            <button type="button" data-manual-ratio-option="3:4" onclick="setManualRatio('3:4')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">3:4</button>
-                            <button type="button" data-manual-ratio-option="4:3" onclick="setManualRatio('4:3')" class="manual-ratio-option h-8 w-full rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">4:3</button>
+                        <div class="flex items-center gap-1.5 text-center overflow-x-auto no-scrollbar">
+                            <button type="button" data-manual-ratio-option="默认" onclick="setManualRatio('默认')" class="manual-ratio-option h-8 min-w-[38px] px-2.5 shrink-0 rounded-md bg-[#ff7a00] text-black text-[12px] font-bold active:scale-95 transition">默认</button>
+                            <button type="button" data-manual-ratio-option="16:9" onclick="setManualRatio('16:9')" class="manual-ratio-option h-8 min-w-[38px] px-2.5 shrink-0 rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">16:9</button>
+                            <button type="button" data-manual-ratio-option="9:16" onclick="setManualRatio('9:16')" class="manual-ratio-option h-8 min-w-[38px] px-2.5 shrink-0 rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">9:16</button>
+                            <button type="button" data-manual-ratio-option="1:1" onclick="setManualRatio('1:1')" class="manual-ratio-option h-8 min-w-[38px] px-2.5 shrink-0 rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">1:1</button>
+                            <button type="button" data-manual-ratio-option="3:4" onclick="setManualRatio('3:4')" class="manual-ratio-option h-8 min-w-[38px] px-2.5 shrink-0 rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">3:4</button>
+                            <button type="button" data-manual-ratio-option="4:3" onclick="setManualRatio('4:3')" class="manual-ratio-option h-8 min-w-[38px] px-2.5 shrink-0 rounded-md bg-white text-[#111] text-[12px] font-bold active:scale-95 transition">4:3</button>
                         </div>
                     </div>
                 </div>
@@ -1830,14 +1866,17 @@
                                     }
                                     syncManualWatermarkUI();
 
-        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        // Ensure manual export progress/done pages are mounted on the manual editor modal root,
+        // so both 手动剪辑工作台 and 合并并导出素材选择页 can show the same save flow overlay.
         (function ensureManualExportFlowMounted(){
+            const modalRoot = document.getElementById('manualEditorModal');
             const workspace = document.getElementById('manualEditorWorkspace');
+            const host = modalRoot || workspace;
             const progressPage = document.getElementById('manualExportProgressPage');
             const donePage = document.getElementById('manualExportDonePage');
-            if (workspace) {
-                if (progressPage) workspace.appendChild(progressPage);
-                if (donePage) workspace.appendChild(donePage);
+            if (host) {
+                if (progressPage) host.appendChild(progressPage);
+                if (donePage) host.appendChild(donePage);
             }
         })();
 </script>
@@ -1977,15 +2016,24 @@
             toolboxSheetBackdrop.addEventListener('click', closeToolboxSheet);
         }
 
+        let manualMarkerLiteMode = false;
+
         function toolboxOpenManualMarkerEdit() {
+            manualMarkerLiteMode = true;
             closeToolboxSheet();
             if (typeof openManualEditorFromHome === 'function') openManualEditorFromHome();
+            if (typeof markManualEditorOpen === 'function') markManualEditorOpen();
         }
 
         function toolboxOpenMergeAndExport() {
+            manualMarkerLiteMode = false;
+            manualEntryMode = 'mergeExport';
             closeToolboxSheet();
-            // 复用现有“一键成片”的合成视图，作为合并&导出入口
-            if (typeof openSmartMergeFromMarkers === 'function') openSmartMergeFromMarkers();
+            resetManualEditorFlow();
+            if (window.setBottomTab) {
+                setBottomTab('create');
+            }
+            openManualEditorModal();
         }
 
         /* --- FAQ 常见问题：浮窗入口 + Bottom Sheet --- */
@@ -2167,7 +2215,7 @@
 
         function updateFloatingFaqVisibility() {
             if (!floatingFaqEntry) return;
-            // 小问号作为全页面常驻浮窗：仅在用户主动隐藏或全屏 modal/抽屉打开时隐藏
+            // 小问号作为首页常驻浮窗：仅在用户主动隐藏或全屏 modal/抽屉打开时隐藏
             const anyOverlayOpen =
                 faqSheetOpen ||
                 isOverlayOpenById('toolboxSheet') ||
@@ -2805,8 +2853,17 @@
             // FAQ 初始化
             renderFaqTabs();
             renderFaqList();
-            updateFloatingFaqVisibility();
             initFloatingFaqDrag();
+            floatingFaqUserHidden = false;
+            saveFloatingFaqHidden(false);
+            if (typeof setFloatingFaqPos === 'function') {
+                setFloatingFaqPos(319, 640);
+                saveFloatingFaqPos(319, 640);
+            }
+            if (floatingFaqEntry) {
+                floatingFaqEntry.classList.remove('hidden');
+            }
+            updateFloatingFaqVisibility();
             syncFloatingFaqToggleUI();
         });
 
@@ -3350,17 +3407,67 @@
             }, 250);
         }
 
-        let manualSourceSelected = false;
+        let manualSelectedSources = [];
+        let manualEntryMode = 'edit';
+
+        function formatManualSelectionDuration(totalSeconds) {
+            const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+            const s = Math.floor(totalSeconds % 60).toString().padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        function updateManualSelectionModeUI() {
+            const title = document.querySelector('#manualEditorSelect h3');
+            const defaultFooter = document.getElementById('manualSelectionDefaultFooter');
+            const mergeFooter = document.getElementById('manualMergeExportFooter');
+            const nextBtn = document.getElementById('manualNextBtn');
+            const hint = document.getElementById('manualSelectionHint');
+            const duration = document.getElementById('manualSelectionDuration');
+            const mergeSummary = document.getElementById('manualMergeSelectionSummary');
+            const mergeDuration = document.getElementById('manualMergeSelectionDuration');
+            const mergeNextBtn = document.getElementById('manualMergeNextBtn');
+            const isMergeExport = manualEntryMode === 'mergeExport';
+            const selectedCount = manualSelectedSources.length;
+            const hasSelection = selectedCount > 0;
+            const totalSeconds = manualSelectedSources.reduce((sum, id) => {
+                const card = document.getElementById(`manualSourceCard${id}`);
+                return sum + Number(card?.dataset.duration || 0);
+            }, 0);
+            if (title) title.innerText = '选择素材';
+            if (defaultFooter) defaultFooter.classList.toggle('hidden', isMergeExport);
+            if (mergeFooter) mergeFooter.classList.toggle('hidden', !isMergeExport);
+            if (hint) hint.innerText = hasSelection ? `已选择 ${selectedCount} 段素材` : '请选择素材';
+            if (duration) duration.innerText = `总时长 ${formatManualSelectionDuration(totalSeconds)}`;
+            if (nextBtn) {
+                nextBtn.disabled = !hasSelection;
+                nextBtn.classList.toggle('bg-[#ff7a00]', hasSelection);
+                nextBtn.classList.toggle('bg-white/30', !hasSelection);
+            }
+            [1,2].forEach((id) => {
+                const thumb = document.getElementById(`manualMergeSelectedThumb${id}`);
+                if (thumb) thumb.classList.toggle('hidden', !manualSelectedSources.includes(id));
+            });
+            if (mergeSummary) mergeSummary.innerText = hasSelection ? `已选 ${selectedCount} 段素材` : '请选择至少 2 段视频';
+            if (mergeDuration) mergeDuration.innerText = hasSelection ? `素材总时长 ${formatManualSelectionDuration(totalSeconds)}` : '支持多段合并后直接导出';
+            if (mergeNextBtn) {
+                const enableMerge = selectedCount >= 2;
+                mergeNextBtn.disabled = !enableMerge;
+                mergeNextBtn.classList.toggle('bg-[#ff7a00]', enableMerge);
+                mergeNextBtn.classList.toggle('text-white', enableMerge);
+                mergeNextBtn.classList.toggle('bg-white/18', !enableMerge);
+                mergeNextBtn.classList.toggle('text-white/70', !enableMerge);
+            }
+        }
 
         function resetManualEditorFlow() {
-            manualSourceSelected = false;
+            manualSelectedSources = [];
             manualMuted = false;
             const selectView = document.getElementById('manualEditorSelect');
             const workspaceView = document.getElementById('manualEditorWorkspace');
             const hint = document.getElementById('manualSelectionHint');
             const duration = document.getElementById('manualSelectionDuration');
             const nextBtn = document.getElementById('manualNextBtn');
-            const indicator = document.getElementById('manualSelectIndicator');
             if (selectView && workspaceView) {
                 selectView.classList.remove('hidden');
                 workspaceView.classList.add('hidden');
@@ -3372,18 +3479,13 @@
                 nextBtn.classList.remove('bg-[#ff7a00]');
                 nextBtn.classList.add('bg-white/30');
             }
-            if (indicator) {
-                indicator.classList.remove('bg-[#ff7a00]', 'border-[#ff7a00]', 'text-white');
-                indicator.classList.add('border-white/70', 'text-transparent');
-                const muteBtn = document.getElementById('manualMuteBtn');
-            const muteIcon = document.getElementById('manualMuteIcon');
-            const muteText = document.getElementById('manualMuteText');
-            if (muteBtn) muteBtn.classList.remove('bg-white/10', 'ring-1', 'ring-white/10');
-            if (muteIcon) muteIcon.className = 'fa-solid fa-volume-high text-[24px] text-white/80';
-            if (muteText) { muteText.innerText = '关闭原声'; muteText.classList.remove('text-[#ff7a00]'); muteText.classList.add('text-white'); }
-            hideManualTimelineGuide();
-            closeManualSubtool();
-        }
+            [1,2].forEach((id) => {
+                const indicator = document.getElementById(`manualSelectIndicator${id}`);
+                if (indicator) {
+                    indicator.classList.remove('bg-[#ff7a00]', 'border-[#ff7a00]', 'text-white');
+                    indicator.classList.add('border-white/70', 'text-transparent');
+                }
+            });
             const muteBtn = document.getElementById('manualMuteBtn');
             const muteIcon = document.getElementById('manualMuteIcon');
             const muteText = document.getElementById('manualMuteText');
@@ -3391,10 +3493,15 @@
             if (muteIcon) muteIcon.className = 'fa-solid fa-volume-high text-[24px] text-white/80';
             if (muteText) { muteText.innerText = '关闭原声'; muteText.classList.remove('text-[#ff7a00]'); muteText.classList.add('text-white'); }
             hideManualTimelineGuide();
+            closeManualSubtool();
             closeManualExportSheet();
+            hideManualMarkerLiteOverlay();
+            updateManualSelectionModeUI();
         }
 
         function openNewProjectFlow() {
+            manualMarkerLiteMode = false;
+            manualEntryMode = 'edit';
             resetManualEditorFlow();
             if (window.setBottomTab) {
                 setBottomTab('create');
@@ -3403,6 +3510,7 @@
         }
 
         function openManualEditorFromHome() {
+            manualEntryMode = 'edit';
             resetManualEditorFlow();
             manualMuted = false;
             if (window.setBottomTab) {
@@ -3411,26 +3519,27 @@
             openManualEditorModal();
         }
 
-        function toggleManualSourceSelection() {
-            manualSourceSelected = !manualSourceSelected;
-            const hint = document.getElementById('manualSelectionHint');
-            const duration = document.getElementById('manualSelectionDuration');
-            const nextBtn = document.getElementById('manualNextBtn');
-            const indicator = document.getElementById('manualSelectIndicator');
-            if (hint) hint.innerText = manualSourceSelected ? '已选择素材' : '请选择素材';
-            if (duration) duration.innerText = manualSourceSelected ? '总时长 00:00:19' : '总时长 00:00:00';
-            if (nextBtn) {
-                nextBtn.disabled = !manualSourceSelected;
-                nextBtn.classList.toggle('bg-[#ff7a00]', manualSourceSelected);
-                nextBtn.classList.toggle('bg-white/30', !manualSourceSelected);
+        function toggleManualSourceSelection(sourceId) {
+            const id = Number(sourceId);
+            const index = manualSelectedSources.indexOf(id);
+            if (index >= 0) {
+                manualSelectedSources.splice(index, 1);
+            } else {
+                manualSelectedSources.push(id);
+                manualSelectedSources.sort((a, b) => a - b);
             }
-            if (indicator) {
-                indicator.classList.toggle('bg-[#ff7a00]', manualSourceSelected);
-                indicator.classList.toggle('border-[#ff7a00]', manualSourceSelected);
-                indicator.classList.toggle('text-white', manualSourceSelected);
-                indicator.classList.toggle('border-white/70', !manualSourceSelected);
-                indicator.classList.toggle('text-transparent', !manualSourceSelected);
-            }
+            [1,2].forEach((itemId) => {
+                const indicator = document.getElementById(`manualSelectIndicator${itemId}`);
+                const selected = manualSelectedSources.includes(itemId);
+                if (indicator) {
+                    indicator.classList.toggle('bg-[#ff7a00]', selected);
+                    indicator.classList.toggle('border-[#ff7a00]', selected);
+                    indicator.classList.toggle('text-white', selected);
+                    indicator.classList.toggle('border-white/70', !selected);
+                    indicator.classList.toggle('text-transparent', !selected);
+                }
+            });
+            updateManualSelectionModeUI();
         }
 
         function setManualAlbumTab(tab) {
@@ -3471,8 +3580,21 @@
             });
         }
 
+        function handleManualSelectionNext() {
+            enterManualEditorWorkspace();
+        }
+
+        function handleManualMergeExportNext() {
+            if (manualSelectedSources.length < 2) return;
+            startManualSaveExport();
+        }
+
         function enterManualEditorWorkspace() {
-            if (!manualSourceSelected) return;
+            if (!manualSelectedSources.length) return;
+            if (manualEntryMode === 'mergeExport') {
+                startManualSaveExport();
+                return;
+            }
             const selectView = document.getElementById('manualEditorSelect');
             const workspaceView = document.getElementById('manualEditorWorkspace');
             if (!selectView || !workspaceView) return;
@@ -3484,6 +3606,11 @@
             /* showManualTimelineGuide deferred */
             setManualExportPreset('默认');
             manualExportCustomEnabled = false;
+            if (manualMarkerLiteMode) {
+                openManualMarkerLiteOverlay();
+            } else {
+                hideManualMarkerLiteOverlay();
+            }
         }
 
         function backToManualSelection() {
@@ -3642,7 +3769,7 @@
                 setBottomTab('create');
             }
             resetManualEditorFlow();
-            manualSourceSelected = true;
+            manualSelectedSources = [1];
             enterManualEditorWorkspace();
             openManualEditorModal();
         }
@@ -4171,14 +4298,17 @@
             }
             syncManualWatermarkUI();
 
-        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        // Ensure manual export progress/done pages are mounted on the manual editor modal root,
+        // so both 手动剪辑工作台 and 合并并导出素材选择页 can show the same save flow overlay.
         (function ensureManualExportFlowMounted(){
+            const modalRoot = document.getElementById('manualEditorModal');
             const workspace = document.getElementById('manualEditorWorkspace');
+            const host = modalRoot || workspace;
             const progressPage = document.getElementById('manualExportProgressPage');
             const donePage = document.getElementById('manualExportDonePage');
-            if (workspace) {
-                if (progressPage) workspace.appendChild(progressPage);
-                if (donePage) workspace.appendChild(donePage);
+            if (host) {
+                if (progressPage) host.appendChild(progressPage);
+                if (donePage) host.appendChild(donePage);
             }
         })();
         }
@@ -4192,14 +4322,17 @@
             manualWatermarkEnabled = !manualWatermarkEnabled;
             syncManualWatermarkUI();
 
-        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        // Ensure manual export progress/done pages are mounted on the manual editor modal root,
+        // so both 手动剪辑工作台 and 合并并导出素材选择页 can show the same save flow overlay.
         (function ensureManualExportFlowMounted(){
+            const modalRoot = document.getElementById('manualEditorModal');
             const workspace = document.getElementById('manualEditorWorkspace');
+            const host = modalRoot || workspace;
             const progressPage = document.getElementById('manualExportProgressPage');
             const donePage = document.getElementById('manualExportDonePage');
-            if (workspace) {
-                if (progressPage) workspace.appendChild(progressPage);
-                if (donePage) workspace.appendChild(donePage);
+            if (host) {
+                if (progressPage) host.appendChild(progressPage);
+                if (donePage) host.appendChild(donePage);
             }
         })();
         }
@@ -4208,14 +4341,17 @@
             manualWatermarkPosition = position;
             syncManualWatermarkUI();
 
-        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        // Ensure manual export progress/done pages are mounted on the manual editor modal root,
+        // so both 手动剪辑工作台 and 合并并导出素材选择页 can show the same save flow overlay.
         (function ensureManualExportFlowMounted(){
+            const modalRoot = document.getElementById('manualEditorModal');
             const workspace = document.getElementById('manualEditorWorkspace');
+            const host = modalRoot || workspace;
             const progressPage = document.getElementById('manualExportProgressPage');
             const donePage = document.getElementById('manualExportDonePage');
-            if (workspace) {
-                if (progressPage) workspace.appendChild(progressPage);
-                if (donePage) workspace.appendChild(donePage);
+            if (host) {
+                if (progressPage) host.appendChild(progressPage);
+                if (donePage) host.appendChild(donePage);
             }
         })();
         }
@@ -4223,6 +4359,8 @@
         function syncManualWatermarkUI() {
             const preview = document.getElementById('manualWatermarkPreview');
             const editorPreview = document.getElementById('manualEditorWatermarkPreview');
+            const exportPreview = document.getElementById('manualExportWatermarkPreview');
+            const markerLitePreview = document.getElementById('manualMarkerLiteWatermarkPreview');
             const toggle = document.getElementById('manualWatermarkToggle');
             const knob = document.getElementById('manualWatermarkKnob');
             const controls = document.getElementById('manualWatermarkControls');
@@ -4235,7 +4373,7 @@
                 'bottom-right': {right:'5%', bottom:'9%'}
             };
             const cfg = posMap[manualWatermarkPosition] || posMap['bottom-center'];
-            [preview, editorPreview].forEach((node) => {
+            [preview, editorPreview, exportPreview, markerLitePreview].forEach((node) => {
                 if (!node) return;
                 node.innerText = 'XbotGo';
                 node.style.opacity = manualWatermarkEnabled ? '1' : '0';
@@ -4280,8 +4418,14 @@
         function startManualSaveExport() {
             closeManualExportSheet();
             closeManualExportDetail();
+            const modalRoot = document.getElementById('manualEditorModal');
             const progressPage = document.getElementById('manualExportProgressPage');
             const donePage = document.getElementById('manualExportDonePage');
+            if (modalRoot) {
+                if (progressPage) modalRoot.appendChild(progressPage);
+                if (donePage) modalRoot.appendChild(donePage);
+            }
+            
             const progressText = document.getElementById('manualExportProgressText');
             const progressImage = document.getElementById('manualExportProgressImage');
             const previewImage = document.getElementById('manualPreviewImage');
@@ -4291,6 +4435,11 @@
             const share = document.getElementById('manualExportShareSection');
             if (previewImage && progressImage && previewImage.getAttribute('src')) {
                 progressImage.setAttribute('src', previewImage.getAttribute('src'));
+            } else if (progressImage && manualSelectedSources.length) {
+                const firstCardImage = document.querySelector(`#manualSourceCard${manualSelectedSources[0]} img`);
+                if (firstCardImage?.getAttribute('src')) {
+                    progressImage.setAttribute('src', firstCardImage.getAttribute('src'));
+                }
             }
             if (donePage) {
                 donePage.classList.add('hidden');
@@ -4300,6 +4449,7 @@
                 progressPage.classList.remove('hidden');
                 progressPage.style.display = 'block';
             }
+            syncManualWatermarkUI();
             if (title) title.innerText = '正在努力保存中';
             if (desc) desc.innerHTML = '将 App 切换到后台将暂停保存，在不重启 App 的情况下切换回前台可继续保存。<br>温馨提示：导出后的视频不支持 AI 分析。';
             if (share) { share.classList.add('hidden'); share.style.display = 'none'; }
@@ -4334,6 +4484,7 @@
                 progressPage.classList.remove('hidden');
                 progressPage.style.display = 'block';
             }
+            syncManualWatermarkUI();
             if (progressText) progressText.innerText = '100%';
             if (title) title.innerText = '已完成';
             if (desc) desc.innerHTML = '视频已保存到本地相册。<br>导出后的视频不支持 AI 分析。';
@@ -4450,14 +4601,17 @@
 
         syncManualWatermarkUI();
 
-        // Ensure manual export progress/done pages are mounted in the manual editor overlay layer
+        // Ensure manual export progress/done pages are mounted on the manual editor modal root,
+        // so both 手动剪辑工作台 and 合并并导出素材选择页 can show the same save flow overlay.
         (function ensureManualExportFlowMounted(){
+            const modalRoot = document.getElementById('manualEditorModal');
             const workspace = document.getElementById('manualEditorWorkspace');
+            const host = modalRoot || workspace;
             const progressPage = document.getElementById('manualExportProgressPage');
             const donePage = document.getElementById('manualExportDonePage');
-            if (workspace) {
-                if (progressPage) workspace.appendChild(progressPage);
-                if (donePage) workspace.appendChild(donePage);
+            if (host) {
+                if (progressPage) host.appendChild(progressPage);
+                if (donePage) host.appendChild(donePage);
             }
         })();
 
@@ -4499,6 +4653,459 @@
 })();
 </script>
 
+<script>
+let manualMarkerLiteState = {
+    duration: 20,
+    currentTime: 0,
+    selectedMarker: null,
+    markers: [2, 4],
+    thumbs: [
+        'https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1542652735873-fb2825bac6e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1515523110800-9415d13b84a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1505666287802-931dc83948e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
+        'https://images.unsplash.com/photo-1542652735873-fb2825bac6e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80'
+    ]
+};
+
+function formatManualMarkerTime(sec) {
+    const s = Math.max(0, Math.round(sec));
+    const mm = String(Math.floor(s / 60)).padStart(2, '0');
+    const ss = String(s % 60).padStart(2, '0');
+    return `${mm}:${ss}`;
+}
+
+function ensureManualMarkerLiteOverlay() {
+    const workspace = document.getElementById('manualEditorWorkspace');
+    if (!workspace) return null;
+    let overlay = document.getElementById('manualMarkerLiteOverlay');
+    if (overlay) return overlay;
+    overlay = document.createElement('div');
+    overlay.id = 'manualMarkerLiteOverlay';
+    overlay.className = 'hidden absolute inset-0 z-[39] bg-black text-white';
+    overlay.innerHTML = `
+        <div class="h-full flex flex-col bg-black">
+            <div class="px-5 pt-11 pb-4">
+                <div class="flex items-center justify-between">
+                    <button type="button" onclick="closeManualMarkerLiteEditor()" class="w-10 h-10 rounded-full bg-white/[0.06] border border-white/[0.05] text-white/92 flex items-center justify-center active:scale-95 transition" aria-label="关闭">
+                        <i class="fa-solid fa-xmark text-[19px]"></i>
+                    </button>
+                    <button type="button" onclick="openManualMarkerExportTimingSheet()" class="h-8 min-w-[56px] px-3 rounded-[10px] bg-[#ff7a00] text-white text-[11px] font-bold flex items-center justify-center active:scale-95 transition">
+                        导出
+                    </button>
+                </div>
+            </div>
+
+            <div class="px-4">
+                <div class="w-full h-[302px] bg-black rounded-sm flex items-center justify-center overflow-hidden">
+                    <div class="relative bg-black overflow-hidden flex items-center justify-center" style="width: 328px; height: 184.5px;">
+                        <img id="manualMarkerLitePreviewImage" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=80" alt="预览画面" class="w-full h-full object-contain">
+                        <div id="manualMarkerLiteWatermarkPreview" class="absolute z-[2] text-white font-bold tracking-tight text-[16px] drop-shadow-lg select-none pointer-events-none" style="left:50%;bottom:9%;transform:translateX(-50%);">XbotGo</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between px-5 pt-2.5 pb-2.5">
+                <div class="flex items-center gap-3 text-white">
+                    <button type="button" onclick="toggleManualMarkerPlayback()" class="w-9 h-9 rounded-full bg-white/[0.08] text-white/92 flex items-center justify-center active:scale-95 transition" aria-label="播放">
+                        <i id="manualMarkerLitePlayIcon" class="fa-solid fa-play text-[12px] ml-[1px]"></i>
+                    </button>
+                    <span id="manualMarkerLiteTimeText" class="text-[15px] font-semibold tracking-[0.01em] text-white/88">00:00/00:20</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="w-8 h-8 rounded-full bg-white/[0.06] text-white/70 flex items-center justify-center active:scale-95 transition" aria-label="撤销">
+                        <i class="fa-solid fa-rotate-left text-[12px]"></i>
+                    </button>
+                    <button type="button" class="w-8 h-8 rounded-full bg-white/[0.06] text-white/70 flex items-center justify-center active:scale-95 transition" aria-label="重做">
+                        <i class="fa-solid fa-rotate-right text-[12px]"></i>
+                    </button>
+                    <button type="button" class="w-8 h-8 rounded-full bg-white/[0.06] text-white/70 flex items-center justify-center active:scale-95 transition" aria-label="全屏">
+                        <i class="fa-solid fa-expand text-[12px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-2 bg-[#121212] border-t border-white/5 flex-1 flex flex-col">
+                <div class="relative flex-1 overflow-hidden">
+                    <div class="px-4 pt-4">
+                        <div class="flex items-center justify-between text-white/45 text-[11px] px-1 mb-2">
+                            <span>00:00</span><span>•</span><span>00:02</span><span>•</span><span>00:04</span><span>•</span><span>00:06</span>
+                        </div>
+                        <div class="flex items-start"><div class="flex-1 min-w-0 relative">
+                                <div id="manualMarkerLiteThumbStrip" class="grid grid-cols-8 gap-1.5 py-0.5"></div>
+                                <div class="relative mt-2 h-[76px] rounded-[2px] bg-[#1f1f1f] overflow-hidden">
+                                    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[40px] bg-white/[0.04]"></div>
+                                    <div id="manualMarkerLiteMarkerTrack" class="absolute inset-0"></div>
+                                </div>
+                                <button type="button" id="manualMarkerLiteCursor" class="absolute top-0 -translate-x-1/2 w-[2px] h-[142px] bg-white z-20 shadow-[0_0_0_1px_rgba(255,255,255,0.18)] active:cursor-grabbing cursor-grab"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 pt-2 text-[11px] text-white/50 border-t border-white/5">拖动白色光标到目标位置后添加标签点；先点选橙色标签点，再删除标签点。</div>
+                <div class="h-[88px] grid grid-cols-2">
+                    <button type="button" onclick="addManualMarkerLitePoint()" class="flex flex-col items-center justify-center text-white active:scale-95 transition">
+                        <span class="w-6 h-6 flex items-center justify-center"><span class="block w-3 h-3 rounded-full bg-white"></span></span>
+                        <span class="mt-2 text-[14px] font-medium">添加标记点</span>
+                    </button>
+                    <button type="button" onclick="deleteManualMarkerLitePoint()" class="flex flex-col items-center justify-center text-white active:scale-95 transition">
+                        <span class="w-6 h-6 flex items-center justify-center"><i class="fa-regular fa-trash-can text-[18px]"></i></span>
+                        <span class="mt-2 text-[14px] font-medium">删除标记点</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="manualMarkerExportTimingMask" class="hidden absolute inset-0 bg-black/45 z-[60]" onclick="closeManualMarkerExportTimingSheet()"></div>
+            <div id="manualMarkerExportTimingSheet" class="hidden absolute left-0 right-0 bottom-0 z-[61] bg-[#f6f6f7] text-black rounded-t-[28px] px-5 pt-5 pb-7 shadow-2xl">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-8"></div>
+                    <h3 class="text-center text-[17px] font-bold">选择标记点时刻</h3>
+                    <button type="button" onclick="closeManualMarkerExportTimingSheet()" class="w-8 h-8 rounded-full text-[#8f8f95] flex items-center justify-center active:scale-95 transition" aria-label="关闭">
+                        <i class="fa-solid fa-xmark text-[20px]"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-center gap-7 mb-5 px-2">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="text-[20px] font-bold text-black">前</span>
+                        <div class="relative h-[132px] w-[84px] overflow-hidden rounded-[18px] bg-white border border-[#ececf0]">
+                            <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[36px] rounded-[12px] bg-[#f1f1f4] border border-[#e2e2e8] z-0 pointer-events-none"></div>
+                            <div id="manualMarkerExportBeforeList" class="absolute inset-0 z-10 overflow-y-auto no-scrollbar snap-y snap-mandatory"></div>
+                        </div>
+                        <span class="text-[20px] font-bold text-black">s</span>
+                    </div>
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span class="text-[20px] font-bold text-black">后</span>
+                        <div class="relative h-[132px] w-[84px] overflow-hidden rounded-[18px] bg-white border border-[#ececf0]">
+                            <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[36px] rounded-[12px] bg-[#f1f1f4] border border-[#e2e2e8] z-0 pointer-events-none"></div>
+                            <div id="manualMarkerExportAfterList" class="absolute inset-0 z-10 overflow-y-auto no-scrollbar snap-y snap-mandatory"></div>
+                        </div>
+                        <span class="text-[20px] font-bold text-black">s</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-6">
+                    <button type="button" onclick="toggleManualMarkerExportTimingDefault()" class="flex items-center gap-3 active:scale-95 transition">
+                        <span id="manualMarkerExportDefaultIcon" class="w-7 h-7 rounded-full bg-[#ff8a00] text-white flex items-center justify-center"><i class="fa-solid fa-check text-[14px]"></i></span>
+                        <span class="text-[14px] font-semibold text-black">默认值</span>
+                    </button>
+                    <button type="button" onclick="openManualMarkerExportMore()" class="text-[14px] font-semibold text-[#8f8f95] active:opacity-80 transition">更多</button>
+                </div>
+
+                <button type="button" onclick="confirmManualMarkerExportTiming()" class="w-full h-12 rounded-[14px] border border-[#ff7a00] bg-[#ff7a00] text-white text-[15px] font-semibold active:scale-[0.99] transition">确认并导出</button>
+            </div>
+</div>
+        </div>`;
+    workspace.appendChild(overlay);
+    return overlay;
+}
+
+function renderManualMarkerLiteThumbs() {
+    const strip = document.getElementById('manualMarkerLiteThumbStrip');
+    if (!strip) return;
+    strip.innerHTML = '';
+    const total = manualMarkerLiteState.duration;
+    manualMarkerLiteState.thumbs.forEach((src, idx) => {
+        const segment = total / manualMarkerLiteState.thumbs.length;
+        const time = Math.min(total, Math.round((idx + 0.5) * segment));
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'relative w-full h-[62px] rounded-[4px] overflow-hidden bg-[#222] border border-black/30 active:scale-95 transition';
+        btn.innerHTML = `<img src="${src}" class="w-full h-full object-cover" alt="thumb">`;
+        btn.onclick = () => setManualMarkerLiteCurrentTime(time);
+        strip.appendChild(btn);
+    });
+}
+
+function renderManualMarkerLiteMarkers() {
+    const track = document.getElementById('manualMarkerLiteMarkerTrack');
+    if (!track) return;
+    track.innerHTML = '';
+    const duration = manualMarkerLiteState.duration;
+    manualMarkerLiteState.markers.forEach((time, idx) => {
+        const left = `${(time / duration) * 100}%`;
+        const active = manualMarkerLiteState.selectedMarker === idx;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-2 bg-[#ff7a00] border-[#ff7a00] shadow-[0_0_0_2px_rgba(0,0,0,0.45)] active:scale-95 transition';
+        btn.style.left = left;
+        btn.innerHTML = `<span class="absolute inset-[3px] rounded-full ${active ? 'bg-black/70' : 'bg-transparent'}"></span>`;
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            manualMarkerLiteState.selectedMarker = idx;
+            setManualMarkerLiteCurrentTime(time, false);
+            renderManualMarkerLiteMarkers();
+        };
+        track.appendChild(btn);
+    });
+}
+
+function getManualMarkerLiteFrameIndexByTime(time) {
+    const thumbCount = manualMarkerLiteState.thumbs.length;
+    if (!thumbCount) return 0;
+    const safeDuration = Math.max(1, manualMarkerLiteState.duration);
+    const segment = safeDuration / thumbCount;
+    return Math.min(thumbCount - 1, Math.max(0, Math.floor(time / segment)));
+}
+
+function syncManualMarkerLitePreview() {
+    const img = document.getElementById('manualMarkerLitePreviewImage');
+    const txt = document.getElementById('manualMarkerLiteTimeText');
+    const idx = getManualMarkerLiteFrameIndexByTime(manualMarkerLiteState.currentTime);
+    if (img) {
+        img.src = manualMarkerLiteState.thumbs[idx];
+    }
+    const strip = document.getElementById('manualMarkerLiteThumbStrip');
+    if (strip) {
+        [...strip.children].forEach((node, childIdx) => {
+            node.classList.toggle('ring-2', childIdx === idx);
+            node.classList.toggle('ring-white/90', childIdx === idx);
+        });
+    }
+    if (txt) txt.innerText = `${formatManualMarkerTime(manualMarkerLiteState.currentTime)}/${formatManualMarkerTime(manualMarkerLiteState.duration)}`;
+    syncManualMarkerLiteCursor();
+}
+
+function syncManualMarkerLiteCursor() {
+    const cursor = document.getElementById('manualMarkerLiteCursor');
+    if (!cursor) return;
+    const left = `${(manualMarkerLiteState.currentTime / manualMarkerLiteState.duration) * 100}%`;
+    cursor.style.left = left;
+}
+
+function setManualMarkerLiteCurrentTime(time, clearSelected = true) {
+    manualMarkerLiteState.currentTime = Math.max(0, Math.min(manualMarkerLiteState.duration, time));
+    if (clearSelected) manualMarkerLiteState.selectedMarker = null;
+    syncManualMarkerLitePreview();
+    renderManualMarkerLiteMarkers();
+}
+
+function bindManualMarkerLiteTrackInteractions() {
+    const trackWrap = document.getElementById('manualMarkerLiteMarkerTrack')?.parentElement;
+    const cursor = document.getElementById('manualMarkerLiteCursor');
+    if (!trackWrap || !cursor || trackWrap.dataset.bound === 'true') return;
+
+    const updateByEvent = (clientX) => {
+        const rect = trackWrap.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        setManualMarkerLiteCurrentTime(ratio * manualMarkerLiteState.duration, true);
+    };
+
+    trackWrap.addEventListener('click', (e) => {
+        if (e.target.closest('#manualMarkerLiteMarkerTrack button')) return;
+        updateByEvent(e.clientX);
+    });
+
+    let dragging = false;
+    const move = (e) => {
+        if (!dragging) return;
+        updateByEvent(e.clientX);
+    };
+    const up = () => {
+        dragging = false;
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+    };
+
+    cursor.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragging = true;
+        window.addEventListener('pointermove', move);
+        window.addEventListener('pointerup', up);
+    });
+
+    trackWrap.dataset.bound = 'true';
+}
+
+function addManualMarkerLitePoint() {
+    const t = manualMarkerLiteState.currentTime;
+    const exists = manualMarkerLiteState.markers.findIndex(v => Math.abs(v - t) < 1);
+    if (exists > -1) {
+        manualMarkerLiteState.selectedMarker = exists;
+    } else {
+        manualMarkerLiteState.markers.push(t);
+        manualMarkerLiteState.markers.sort((a,b) => a-b);
+        manualMarkerLiteState.selectedMarker = manualMarkerLiteState.markers.findIndex(v => Math.abs(v - t) < 1);
+    }
+    markManualDraftDirty();
+    renderManualMarkerLiteMarkers();
+}
+
+function deleteManualMarkerLitePoint() {
+    if (manualMarkerLiteState.selectedMarker == null) return;
+    manualMarkerLiteState.markers.splice(manualMarkerLiteState.selectedMarker, 1);
+    manualMarkerLiteState.selectedMarker = null;
+    markManualDraftDirty();
+    renderManualMarkerLiteMarkers();
+}
+
+function toggleManualMarkerPlayback() {
+    const icon = document.getElementById('manualMarkerLitePlayIcon');
+    if (!icon) return;
+    const paused = icon.classList.contains('fa-play');
+    icon.className = paused ? 'fa-solid fa-pause text-[12px]' : 'fa-solid fa-play text-[12px] ml-[1px]';
+}
+
+let manualMarkerExportTimingState = {
+    before: 2,
+    after: 4,
+    useDefault: true,
+    scrollTimers: {}
+};
+
+function renderManualMarkerExportTimingList(containerId, selected) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const values = [1,2,3,4,5,6,7];
+    const spacer = '<div style="height:48px;flex-shrink:0;"></div>';
+    container.innerHTML = spacer + values.map((value) => (
+        `<button type="button" data-export-value="${value}" class="relative z-10 block snap-center h-[36px] w-full text-center text-[20px] font-bold leading-[36px] transition active:scale-95 text-black/30">${value}</button>`
+    )).join('') + spacer;
+    const currentSelected = values.includes(selected) ? selected : values[0];
+    container.querySelectorAll('[data-export-value]').forEach((btn) => {
+        btn.onclick = () => {
+            const value = Number(btn.dataset.exportValue);
+            setManualMarkerExportTimingValue(containerId, value, true);
+        };
+    });
+    if (!container.dataset.bound) {
+        container.addEventListener('scroll', () => {
+            window.clearTimeout(manualMarkerExportTimingState.scrollTimers[containerId]);
+            manualMarkerExportTimingState.scrollTimers[containerId] = window.setTimeout(() => {
+                snapManualMarkerExportTimingScroll(containerId);
+            }, 60);
+        });
+        container.dataset.bound = '1';
+    }
+    requestAnimationFrame(() => {
+        setManualMarkerExportTimingValue(containerId, currentSelected, false);
+    });
+}
+
+function setManualMarkerExportTimingValue(containerId, value, shouldScroll) {
+    if (containerId === 'manualMarkerExportBeforeList') manualMarkerExportTimingState.before = value;
+    else manualMarkerExportTimingState.after = value;
+    manualMarkerExportTimingState.useDefault = (manualMarkerExportTimingState.before === 2 && manualMarkerExportTimingState.after === 4);
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.querySelectorAll('[data-export-value]').forEach((btn) => {
+            const active = Number(btn.dataset.exportValue) === value;
+            btn.className = `relative z-10 block snap-center h-[36px] w-full text-center text-[20px] font-bold leading-[36px] transition active:scale-95 ${active ? 'text-black' : 'text-black/28'}`;
+        });
+        const target = container.querySelector(`[data-export-value="${value}"]`);
+        if (target) {
+            const top = target.offsetTop - (container.clientHeight - target.offsetHeight) / 2;
+            if (shouldScroll) container.scrollTo({ top, behavior: 'smooth' });
+            else container.scrollTop = top;
+        }
+    }
+    syncManualMarkerExportTimingDefaultIcon();
+}
+
+function snapManualMarkerExportTimingScroll(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const buttons = Array.from(container.querySelectorAll('[data-export-value]'));
+    if (!buttons.length) return;
+    const center = container.scrollTop + container.clientHeight / 2;
+    let nearest = buttons[0];
+    let minDist = Infinity;
+    buttons.forEach((btn) => {
+        const btnCenter = btn.offsetTop + btn.offsetHeight / 2;
+        const dist = Math.abs(btnCenter - center);
+        if (dist < minDist) {
+            minDist = dist;
+            nearest = btn;
+        }
+    });
+    setManualMarkerExportTimingValue(containerId, Number(nearest.dataset.exportValue), true);
+}
+
+function syncManualMarkerExportTimingDefaultIcon() {
+    const icon = document.getElementById('manualMarkerExportDefaultIcon');
+    if (icon) {
+        icon.className = manualMarkerExportTimingState.useDefault
+            ? 'w-7 h-7 rounded-full bg-[#ff8a00] text-white flex items-center justify-center border border-[#ff8a00]'
+            : 'w-7 h-7 rounded-full bg-transparent text-transparent flex items-center justify-center border-2 border-[#c8c8ce]';
+        icon.innerHTML = manualMarkerExportTimingState.useDefault ? '<i class="fa-solid fa-check text-[14px]"></i>' : '';
+    }
+}
+
+function syncManualMarkerExportTimingUI() {
+    renderManualMarkerExportTimingList('manualMarkerExportBeforeList', manualMarkerExportTimingState.before);
+    renderManualMarkerExportTimingList('manualMarkerExportAfterList', manualMarkerExportTimingState.after);
+    syncManualMarkerExportTimingDefaultIcon();
+}
+
+function openManualMarkerExportTimingSheet() {
+    const mask = document.getElementById('manualMarkerExportTimingMask');
+    const sheet = document.getElementById('manualMarkerExportTimingSheet');
+    if (mask) mask.classList.remove('hidden');
+    if (sheet) sheet.classList.remove('hidden');
+    syncManualMarkerExportTimingUI();
+}
+
+function closeManualMarkerExportTimingSheet() {
+    const mask = document.getElementById('manualMarkerExportTimingMask');
+    const sheet = document.getElementById('manualMarkerExportTimingSheet');
+    if (mask) mask.classList.add('hidden');
+    if (sheet) sheet.classList.add('hidden');
+}
+
+function toggleManualMarkerExportTimingDefault() {
+    manualMarkerExportTimingState.useDefault = !manualMarkerExportTimingState.useDefault;
+    if (manualMarkerExportTimingState.useDefault) {
+        manualMarkerExportTimingState.before = 2;
+        manualMarkerExportTimingState.after = 4;
+    }
+    syncManualMarkerExportTimingUI();
+}
+
+function openManualMarkerExportMore() {
+    closeManualMarkerExportTimingSheet();
+    window.setTimeout(() => {
+        openManualExportSheet();
+        window.setTimeout(() => {
+            openManualExportDetail();
+        }, 30);
+    }, 20);
+}
+
+function confirmManualMarkerExportTiming() {
+    closeManualMarkerExportTimingSheet();
+    startManualSaveExport();
+}
+
+function openManualMarkerLiteOverlay() {
+    const overlay = ensureManualMarkerLiteOverlay();
+    if (!overlay) return;
+    overlay.classList.remove('hidden');
+    manualMarkerLiteState.currentTime = 0;
+    manualMarkerLiteState.selectedMarker = null;
+    renderManualMarkerLiteThumbs();
+    syncManualMarkerLitePreview();
+    renderManualMarkerLiteMarkers();
+    bindManualMarkerLiteTrackInteractions();
+}
+
+function hideManualMarkerLiteOverlay() {
+    const overlay = document.getElementById('manualMarkerLiteOverlay');
+    if (overlay) overlay.classList.add('hidden');
+}
+
+function closeManualMarkerLiteEditor() {
+    closeManualMarkerExportTimingSheet();
+    hideManualMarkerLiteOverlay();
+    closeManualEditor();
+    handleManualEditorLeave();
+}
+</script>
+
 
         <!-- 离开手动剪辑后的已保存提醒 -->
         <div id="manualDraftSavedToast" class="hidden absolute left-1/2 -translate-x-1/2 top-[84px] z-[95] w-[86%] max-w-[304px] rounded-[18px] bg-white text-[#111] shadow-2xl border border-gray-200 px-3.5 py-2.5">
@@ -4507,8 +5114,8 @@
                     <i class="fa-solid fa-circle-check text-[16px]"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-[13px] font-extrabold leading-5 text-[#111]">已保存至我的项目</p>
-                    <p class="text-[11px] text-gray-500 mt-0.5 leading-4">你可稍后在首页的 My Projects 中继续编辑。</p>
+                    <p class="text-[13px] font-extrabold leading-5 text-[#111]">已保存至草稿箱</p>
+                    <p class="text-[11px] text-gray-500 mt-0.5 leading-4">你可稍后在我的项目-草稿箱中继续编辑。</p>
                 </div>
                 <button type="button" onclick="hideManualDraftSavedToast()" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center active:scale-95 transition flex-shrink-0">
                     <i class="fa-solid fa-xmark text-[12px]"></i>
