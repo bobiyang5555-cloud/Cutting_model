@@ -103,10 +103,10 @@
 <body class="bg-slate-100 flex justify-center items-center h-screen font-sans">
 
     <!-- 模拟手机外壳 -->
-    <div class="app-shell">
+    <div id="appShell" class="app-shell bg-white">
         
         <!-- 顶部状态栏 -->
-        <div class="h-12 flex justify-between items-center px-6 text-black text-sm font-semibold pt-2 bg-white/95 backdrop-blur border-b border-gray-100 z-10">
+        <div id="statusBar" class="h-12 flex justify-between items-center px-6 text-black text-sm font-semibold pt-2 bg-white/95 backdrop-blur border-b border-gray-100 z-10">
             <span>15:30</span>
             <div class="flex space-x-2 items-center">
                 <i class="fa-solid fa-signal text-xs"></i>
@@ -551,6 +551,127 @@
                 </div>
             </div>
 
+            <!-- 页面：模板详情 -->
+            <div id="pageTemplateDetail" class="page-view hidden bg-black text-white h-full min-h-full">
+                <div class="px-5 pt-4 pb-3 flex items-center bg-black">
+                    <button type="button" onclick="closeTemplateDetailPage()" class="w-10 h-10 -ml-2 flex items-center justify-center text-white active:opacity-70" aria-label="返回">
+                        <i class="fa-solid fa-chevron-left text-[22px]"></i>
+                    </button>
+                </div>
+                <div class="px-5 pt-2 pb-0 h-[calc(100%-56px)] flex flex-col bg-black overflow-hidden">
+                    <div class="text-center shrink-0">
+                        <h2 id="templateDetailTitle" class="text-[20px] leading-[1.15] font-black tracking-[-0.02em]">Beat Drop Solo</h2>
+                        <div class="mt-3 flex items-center justify-center gap-2">
+                            <span class="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg bg-white/16 text-white/92 text-[12px] font-semibold">
+                                <i class="fa-solid fa-scissors text-[12px]"></i>
+                                <span id="templateDetailClipCount">片段 2</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg bg-white/16 text-white/92 text-[12px] font-semibold">
+                                <i class="fa-solid fa-clock text-[12px]"></i>
+                                <span id="templateDetailDuration">时长 00:11</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 bg-black shrink min-h-0">
+                        <div class="w-full bg-black relative aspect-[16/9] overflow-hidden">
+                            <img id="templateDetailPreview" src="https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover" alt="模板预览">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-black/10"></div>
+                        </div>
+                        <div class="px-1 pb-0 pt-3 bg-black">
+                            <div class="flex items-center gap-3 text-white/95">
+                                <i class="fa-solid fa-play text-[20px]"></i>
+                                <div class="flex-1 h-[4px] rounded-full bg-white/18 overflow-hidden">
+                                    <div class="h-full w-[18%] rounded-full bg-white"></div>
+                                </div>
+                                <span id="templateDetailTimeline" class="inline-flex items-center h-8 px-3 rounded-lg bg-black text-white text-[13px] font-semibold tracking-wide border border-white/12">00:00 / 00:11</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-5 pb-6 shrink-0 bg-black">
+                        <button type="button" onclick="useCurrentTemplate()" class="w-full h-12 rounded-[14px] border border-[#ff7a00] bg-[#ff7a00] text-white text-[15px] font-semibold shadow-[0_0_0_1px_rgba(255,122,0,0.18)] active:scale-[0.99] transition">
+                            使用模板
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面：模板专属选择素材 -->
+            <div id="pageTemplateMaterialSelect" class="page-view hidden bg-black text-white h-full min-h-full flex flex-col">
+                <div class="px-5 pt-4 pb-3 shrink-0 bg-black border-b border-white/[0.04]">
+                    <div class="flex items-center justify-between mb-4">
+                        <button type="button" onclick="closeTemplateMaterialSelectPage()" class="w-10 h-10 -ml-2 flex items-center justify-center text-white active:opacity-70" aria-label="关闭">
+                            <i class="fa-solid fa-xmark text-[22px]"></i>
+                        </button>
+                        <h3 class="text-[17px] font-bold tracking-[-0.01em] text-white/96">选择素材</h3>
+                        <div class="w-10"></div>
+                    </div>
+
+                    <div class="rounded-[18px] bg-white/[0.16] p-[2px] flex h-[44px]">
+                        <button id="templateMaterialAlbumAppBtn" type="button" onclick="switchTemplateMaterialAlbum('app')" class="flex-1 rounded-[14px] bg-white text-[#2b2b2d] text-[12px] font-bold tracking-[-0.01em] transition">App 相册</button>
+                        <button id="templateMaterialAlbumPhoneBtn" type="button" onclick="switchTemplateMaterialAlbum('phone')" class="flex-1 rounded-[14px] text-white/82 text-[12px] font-bold tracking-[-0.01em] transition">手机相册</button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto no-scrollbar bg-black px-5 pt-4 pb-6">
+                    <p class="text-white/62 text-[13px] mb-3">2026-04-02</p>
+                    <div class="grid grid-cols-4 gap-2.5">
+                        <button id="templateMaterialSourceCard1" data-template-source-id="1" data-duration="88" type="button" onclick="toggleTemplateMaterialSelection(1)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面1" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator1" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">01:28</span>
+                        </button>
+                        <button id="templateMaterialSourceCard2" data-template-source-id="2" data-duration="44" type="button" onclick="toggleTemplateMaterialSelection(2)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面2" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator2" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">00:44</span>
+                        </button>
+                        <button id="templateMaterialSourceCard3" data-template-source-id="3" data-duration="44" type="button" onclick="toggleTemplateMaterialSelection(3)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1542652735873-fb2825bac6e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面3" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator3" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">00:44</span>
+                        </button>
+                        <button id="templateMaterialSourceCard4" data-template-source-id="4" data-duration="31" type="button" onclick="toggleTemplateMaterialSelection(4)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1515523110800-9415d13b84a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面4" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator4" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">00:31</span>
+                        </button>
+                        <button id="templateMaterialSourceCard5" data-template-source-id="5" data-duration="12" type="button" onclick="toggleTemplateMaterialSelection(5)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1505666287802-931dc83948e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面5" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator5" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">00:12</span>
+                        </button>
+                        <button id="templateMaterialSourceCard6" data-template-source-id="6" data-duration="115" type="button" onclick="toggleTemplateMaterialSelection(6)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1542652735873-fb2825bac6e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面6" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator6" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">01:55</span>
+                        </button>
+                        <button id="templateMaterialSourceCard7" data-template-source-id="7" data-duration="19" type="button" onclick="toggleTemplateMaterialSelection(7)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面7" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator7" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">00:19</span>
+                        </button>
+                        <button id="templateMaterialSourceCard8" data-template-source-id="8" data-duration="26" type="button" onclick="toggleTemplateMaterialSelection(8)" class="relative rounded-[8px] overflow-hidden bg-[#111] border border-transparent active:scale-[0.98] transition block aspect-square">
+                            <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="素材封面8" class="w-full h-full object-cover opacity-90">
+                            <div id="templateMaterialIndicator8" class="absolute top-2 right-2 w-6 h-6 rounded-full border-2 border-white/90 bg-black/18"></div>
+                            <span class="absolute bottom-2 right-2 text-[10px] text-white px-1 rounded">00:26</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="shrink-0 bg-black px-5 pt-4 pb-6">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="min-w-0 flex-1">
+                            <p id="templateMaterialSelectionHint" class="text-white text-[17px] font-bold leading-none">选择 2 段片段</p>
+                            <p class="mt-2 text-white/52 text-[12px] leading-none">请选择素材，可重复选择</p>
+                        </div>
+                        <button id="templateMaterialUseBtn" type="button" disabled class="w-[84px] h-[40px] rounded-full border border-[#6a6a6c] bg-[#6a6a6c] text-white text-[17px] font-bold leading-none transition disabled:cursor-not-allowed disabled:opacity-100">下一步</button>
+                    </div>
+                    <div id="templateMaterialSlotList" class="mt-5 flex flex-wrap gap-3"></div>
+                </div>
+            </div>
+
             <!-- 页面：新模板上新（独立页） -->
             <div id="pageRecommendAll" class="page-view hidden px-5 pt-4">
                 <div class="flex items-center gap-3 mb-3">
@@ -762,7 +883,7 @@
         </div>
 
         <!-- 底部导航栏：5 栏 (首页 / 图库 / 相机 / 创作中心 / 我的) -->
-        <div class="h-[64px] bg-white/95 backdrop-blur border-t border-gray-100 flex justify-around items-center pb-0 pt-0 text-[11px] font-medium z-10">
+        <div id="bottomNav" class="h-[64px] bg-white/95 backdrop-blur border-t border-gray-100 flex justify-around items-center pb-0 pt-0 text-[11px] font-medium z-10">
             <button type="button" id="bottomTabHome" class="bottom-tab flex flex-col items-center text-gray-400 active:scale-95 transition space-y-0.5" data-tab="home" onclick="handleManualEditorLeave(); restoreStudioHome(); setBottomTab('home');">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span>首页</span>
@@ -3178,19 +3299,234 @@
             }
         }
 
-        /* --- 模板入口与 AIGC 能力联动 --- */
-        function openAigcTemplateFlow(templateId) {
-            // 目前直接复用 AIGC 弹窗能力；后续可根据 templateId 切换不同特效风格
-            if (typeof openAigcModal === 'function') {
-                openAigcModal();
+        /* --- 模板详情页交互 --- */
+        const templateDetailMap = {
+            'goal-highlight': {
+                title: '进球集锦 · 自动卡点',
+                clips: '片段 6',
+                duration: '时长 00:18',
+                timeline: '00:00 / 00:18',
+                slotDurations: ['4.2s', '3.8s', '2.6s', '2.9s', '2.1s', '2.4s'],
+                image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
+            },
+            'goal-recap': {
+                title: '进球回顾 · 记分板',
+                clips: '片段 4',
+                duration: '时长 00:12',
+                timeline: '00:00 / 00:12',
+                slotDurations: ['11.7s', '11.1s', '3.4s', '7.1s'],
+                image: 'https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
+            },
+            'moment-slam': {
+                title: '高光瞬间 · 炫酷特效',
+                clips: '片段 2',
+                duration: '时长 00:11',
+                timeline: '00:00 / 00:11',
+                slotDurations: ['5.0s', '2.0s'],
+                image: 'https://images.unsplash.com/photo-1542652735873-fb2825bac6e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
+            },
+            'moment-replay': {
+                title: '高光回放 · 慢动作',
+                clips: '片段 3',
+                duration: '时长 00:10',
+                timeline: '00:00 / 00:10',
+                slotDurations: ['3.8s', '2.7s', '3.1s'],
+                image: 'https://images.unsplash.com/photo-1515523110800-9415d13b84a8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
+            },
+            'star-imitation': {
+                title: '名场面 · 镜头复刻',
+                clips: '片段 5',
+                duration: '时长 00:15',
+                timeline: '00:00 / 00:15',
+                slotDurations: ['2.8s', '3.5s', '2.2s', '3.1s', '3.4s'],
+                image: 'https://images.unsplash.com/photo-1505666287802-931dc83948e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
+            },
+            'star-poster': {
+                title: '球星海报 · 片头片尾',
+                clips: '片段 2',
+                duration: '时长 00:09',
+                timeline: '00:00 / 00:09',
+                slotDurations: ['4.0s', '2.5s'],
+                image: 'https://images.unsplash.com/photo-1519861531473-9200262188bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80'
+            }
+        };
+        let templateDetailReturnPage = 'pageHome';
+        let currentTemplateId = null;
+        let templateMaterialSelectedSources = [];
+        let currentTemplateRequiredCount = 0;
+
+        function setTemplateDetailChrome(isDetail) {
+            const statusBar = document.getElementById('statusBar');
+            const bottomNav = document.getElementById('bottomNav');
+            const scrollContainer = document.getElementById('mainScrollContainer');
+            const appShell = document.getElementById('appShell');
+            if (statusBar) {
+                statusBar.classList.toggle('bg-black', isDetail);
+                statusBar.classList.toggle('text-white', isDetail);
+                statusBar.classList.toggle('border-black', isDetail);
+                statusBar.classList.toggle('bg-white/95', !isDetail);
+                statusBar.classList.toggle('text-black', !isDetail);
+                statusBar.classList.toggle('border-gray-100', !isDetail);
+            }
+            if (bottomNav) {
+                bottomNav.style.display = isDetail ? 'none' : 'flex';
+            }
+            if (scrollContainer) {
+                scrollContainer.classList.toggle('bg-black', isDetail);
+                scrollContainer.classList.toggle('pb-6', !isDetail);
+            }
+            if (appShell) {
+                appShell.classList.toggle('bg-black', isDetail);
+                appShell.classList.toggle('bg-white', !isDetail);
             }
         }
 
-        function openStandardTemplateFlow(templateId) {
-            // 预留普通模板流程的入口，当前先走新建项目工作流
-            if (typeof openNewProjectFlow === 'function') {
-                openNewProjectFlow();
+        function openTemplateDetailPage(templateId) {
+            const data = templateDetailMap[templateId] || templateDetailMap['moment-slam'];
+            currentTemplateId = templateId;
+            const visiblePage = document.querySelector('.page-view:not(.hidden)');
+            templateDetailReturnPage = visiblePage ? visiblePage.id : 'pageHome';
+
+            document.getElementById('templateDetailTitle').innerText = data.title;
+            document.getElementById('templateDetailClipCount').innerText = data.clips;
+            document.getElementById('templateDetailDuration').innerText = data.duration;
+            document.getElementById('templateDetailTimeline').innerText = data.timeline;
+            document.getElementById('templateDetailPreview').src = data.image;
+
+            document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById('pageTemplateDetail').classList.remove('hidden');
+            setTemplateDetailChrome(true);
+            document.getElementById('mainScrollContainer').scrollTop = 0;
+        }
+
+        function closeTemplateDetailPage() {
+            document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(templateDetailReturnPage || 'pageHome');
+            if (target) target.classList.remove('hidden');
+            setTemplateDetailChrome(false);
+        }
+
+
+        let currentTemplateMaterialAlbumTab = 'app';
+
+        function switchTemplateMaterialAlbum(tab) {
+            currentTemplateMaterialAlbumTab = tab === 'phone' ? 'phone' : 'app';
+            const appBtn = document.getElementById('templateMaterialAlbumAppBtn');
+            const phoneBtn = document.getElementById('templateMaterialAlbumPhoneBtn');
+            if (appBtn) {
+                const active = currentTemplateMaterialAlbumTab === 'app';
+                appBtn.classList.toggle('bg-white', active);
+                appBtn.classList.toggle('text-[#2b2b2d]', active);
+                appBtn.classList.toggle('text-white/82', !active);
             }
+            if (phoneBtn) {
+                const active = currentTemplateMaterialAlbumTab === 'phone';
+                phoneBtn.classList.toggle('bg-white', active);
+                phoneBtn.classList.toggle('text-[#2b2b2d]', active);
+                phoneBtn.classList.toggle('text-white/82', !active);
+            }
+        }
+
+        function formatTemplateMaterialDuration(totalSeconds) {
+            const h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+            const s = Math.floor(totalSeconds % 60).toString().padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        function updateTemplateMaterialSelectionUI() {
+            const hint = document.getElementById('templateMaterialSelectionHint');
+            const useBtn = document.getElementById('templateMaterialUseBtn');
+            const slotList = document.getElementById('templateMaterialSlotList');
+            const count = templateMaterialSelectedSources.length;
+            const currentTemplateData = templateDetailMap[currentTemplateId] || {};
+            const slotDurations = Array.isArray(currentTemplateData.slotDurations) ? currentTemplateData.slotDurations : [];
+            if (hint) hint.innerText = `选择 ${currentTemplateRequiredCount || 0} 段片段`;
+            if (slotList) {
+                slotList.innerHTML = '';
+                for (let i = 0; i < currentTemplateRequiredCount; i += 1) {
+                    const sourceId = templateMaterialSelectedSources[i];
+                    const slot = document.createElement('div');
+                    const isFilled = Boolean(sourceId);
+                    slot.className = `w-[72px] h-[48px] rounded-[10px] border ${isFilled ? 'bg-[#5a5a5d] border-[#8b8b90] text-white shadow-[0_4px_12px_rgba(255,255,255,0.06)]' : 'bg-[#3c3c3f] border-[#4b4b4f] text-white/88'} flex items-center justify-center text-[11px] font-bold tracking-[-0.01em] transition`;
+                    slot.innerText = slotDurations[i] || '--';
+                    slotList.appendChild(slot);
+                }
+            }
+            if (useBtn) {
+                const completed = currentTemplateRequiredCount > 0 && count === currentTemplateRequiredCount;
+                useBtn.disabled = !completed;
+                useBtn.classList.toggle('bg-[#ff7a00]', completed);
+                useBtn.classList.toggle('border-[#ff7a00]', completed);
+                useBtn.classList.toggle('bg-[#6a6a6c]', !completed);
+                useBtn.classList.toggle('border-[#6a6a6c]', !completed);
+            }
+        }
+
+        function refreshTemplateMaterialCardState() {
+            document.querySelectorAll('[id^="templateMaterialSourceCard"]').forEach((card) => {
+                const itemId = Number(card.dataset.templateSourceId);
+                const indicator = document.getElementById(`templateMaterialIndicator${itemId}`);
+                const selectedIndex = templateMaterialSelectedSources.indexOf(itemId);
+                const selected = selectedIndex !== -1;
+                card.classList.toggle('border-[#ff7a00]', selected);
+                card.classList.toggle('border-[2px]', selected);
+                card.classList.toggle('border-transparent', !selected);
+                card.classList.toggle('shadow-[0_0_0_1px_rgba(255,122,0,0.35)]', selected);
+                if (indicator) {
+                    indicator.classList.toggle('bg-[#ff7a00]', selected);
+                    indicator.classList.toggle('border-[#ff7a00]', selected);
+                    indicator.classList.toggle('text-white', selected);
+                    indicator.classList.toggle('shadow-[0_4px_10px_rgba(255,122,0,0.35)]', selected);
+                    indicator.classList.toggle('bg-black/18', !selected);
+                    indicator.classList.toggle('border-white/90', !selected);
+                    indicator.classList.toggle('text-transparent', !selected);
+                    indicator.textContent = selected ? String(selectedIndex + 1) : '';
+                }
+            });
+        }
+
+        function toggleTemplateMaterialSelection(id) {
+            const exists = templateMaterialSelectedSources.includes(id);
+            if (exists) {
+                templateMaterialSelectedSources = templateMaterialSelectedSources.filter(item => item !== id);
+            } else if (templateMaterialSelectedSources.length < currentTemplateRequiredCount) {
+                templateMaterialSelectedSources = [...templateMaterialSelectedSources, id];
+            }
+            refreshTemplateMaterialCardState();
+            updateTemplateMaterialSelectionUI();
+        }
+
+        function openTemplateMaterialSelectPage() {
+            const data = templateDetailMap[currentTemplateId] || templateDetailMap['moment-slam'];
+            currentTemplateRequiredCount = Number((data.clips || '').replace(/\D/g, '')) || 0;
+            templateMaterialSelectedSources = [];
+            switchTemplateMaterialAlbum(currentTemplateMaterialAlbumTab);
+            refreshTemplateMaterialCardState();
+            updateTemplateMaterialSelectionUI();
+            document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById('pageTemplateMaterialSelect').classList.remove('hidden');
+            setTemplateDetailChrome(true);
+            document.getElementById('mainScrollContainer').scrollTop = 0;
+        }
+
+        function closeTemplateMaterialSelectPage() {
+            document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById('pageTemplateDetail').classList.remove('hidden');
+            setTemplateDetailChrome(true);
+            document.getElementById('mainScrollContainer').scrollTop = 0;
+        }
+
+        function useCurrentTemplate() {
+            openTemplateMaterialSelectPage();
+        }
+
+        function openAigcTemplateFlow(templateId) {
+            openTemplateDetailPage(templateId);
+        }
+
+        function openStandardTemplateFlow(templateId) {
+            openTemplateDetailPage(templateId);
         }
 
         function selectSport(sportType) {
